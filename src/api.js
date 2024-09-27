@@ -10,6 +10,23 @@ const createEmployee = async (data) => {
   return res.data;
 };
 
+
+const loginUser = async (email, password) => {
+  try {
+    const response = await api.post("auth/login", {
+      email: email,
+      password: password,
+    });
+    
+    // Assuming the API returns user data and a token
+    return response.data; 
+  } catch (error) {
+    console.error("Error logging in:", error);
+    throw error;
+  }
+};
+
+
 const fetchEmployees = async (currentPage, itemsPerPage, rangeDate) => {
   try {
     const response = await api.post("admin/employees/fetch", {
@@ -174,6 +191,7 @@ const fetchSettings = async (currentPage, itemsPerPage) => {
 };
 
 export {
+  loginUser,
   fetchDesignationsAndPositionsApi,
   createEmployee,
   fetchEmployees,

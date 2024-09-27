@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -15,57 +15,111 @@ import {
   DialogActions,
   TextField,
   Typography,
+  CircularProgress,
+  Grid,
+  Paper,
+  Divider
 } from "@mui/material";
-import DemoNavbar from "components/Navbars/DemoNavbar";
 import { useForm, Controller } from "react-hook-form";
+import DemoNavbar from "components/Navbars/DemoNavbar";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function UserDashboard() {
   const [openCheckInModal, setOpenCheckInModal] = useState(false);
   const [openCheckOutModal, setOpenCheckOutModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [attendanceData, setAttendanceData] = useState([]);
   const [attendanceMarked, setAttendanceMarked] = useState(false);
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    // Fetch user data from local storage or API
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUserData(JSON.parse(storedUser));
+    }
+  }, []);
   const { control, handleSubmit, formState: { errors }, reset } = useForm();
 
-  const handleCheckInSubmit = (data) => {
-    // Perform check-in logic here (API call, etc.)
-    setAttendanceMarked(true);
-    setOpenCheckInModal(false);
-    reset();
+  const handleCheckInSubmit = async (data) => {
+    setLoading(true);
+    try {
+      await axios.post('/check-ins/mark', {
+        user_id: data.user_id,
+        checkin_description: data.checkin_description,
+      });
+      toast.success("Check-in successful!");
+      setAttendanceMarked(true);
+      setOpenCheckInModal(false);
+      reset();
+    } catch (error) {
+      toast.error("Failed to mark check-in.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleCheckOutSubmit = (data) => {
-    // Perform check-out logic here (API call, etc.)
-    setOpenCheckOutModal(false);
-    reset();
+  const handleCheckOutSubmit = async (data) => {
+    setLoading(true);
+    try {
+      await axios.post('/check-outs/mark', {
+        user_id: data.user_id,
+        check_out_time: data.check_out_time,
+        check_out_description: data.check_out_description,
+      });
+      toast.success("Check-out successful!");
+      setOpenCheckOutModal(false);
+      reset();
+    } catch (error) {
+      toast.error("Failed to mark check-out.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
       <DemoNavbar size="sm" />
       <div style={{ marginTop: "80px" }}>
-        <Card className="p-3" style={{ background: "transparent" }}>
-          <CardHeader>
-            <Typography variant="h4">Attendance Dashboard</Typography>
-          </CardHeader>
+        <Card style={{ padding: "20px", marginBottom: "20px", background: "#f4f4f4" }}>
+          <CardHeader title="Attendance Dashboard" />
           <CardContent>
-            {!attendanceMarked ? (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setOpenCheckInModal(true)}
-              >
-                Mark Attendance (Check-In)
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => setOpenCheckOutModal(true)}
-              >
-                Check-Out
-              </Button>
-            )}
-            
-            {/* Attendance Table */}
+            <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+              <Grid item>
+                {!attendanceMarked ? (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => setOpenCheckInModal(true)}
+                  >
+                    Mark Attendance (Check-In)
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => setOpenCheckOutModal(true)}
+                  >
+                    Check-Out
+                  </Button>
+                )}
+              </Grid>
+              <Grid item>
+                <Typography variant="h6">Welcome, {userData?.name || 'User'}!</Typography>
+              </Grid>
+            </Grid>
+            <Divider style={{ margin: "20px 0" }} />
+            <Grid container spacing={2}>
+              {[1, 2, 3, 4].map((item) => (
+                <Grid item xs={12} sm={6} md={3} key={item}>
+                  <Paper style={{ padding: "16px", textAlign: "center", background: "#fff" }}>
+                    <Typography variant="h6">Card {item}</Typography>
+                  </Paper>
+                </Grid>
+              ))}
+            </Grid>
+            <Divider style={{ margin: "20px 0" }} />
             <Table>
               <TableHead>
                 <TableRow>
@@ -81,18 +135,19 @@ export default function UserDashboard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {/* Map through attendance data */}
-                <TableRow>
-                  <TableCell>12345</TableCell>
-                  <TableCell>2024-09-27</TableCell>
-                  <TableCell>09:00 AM</TableCell>
-                  <TableCell>Checked in for the day</TableCell>
-                  <TableCell>06:00 PM</TableCell>
-                  <TableCell>Completed tasks</TableCell>
-                  <TableCell>Present</TableCell>
-                  <TableCell>2024-09-27 09:00 AM</TableCell>
-                  <TableCell>2024-09-27 06:00 PM</TableCell>
-                </TableRow>
+                {attendanceData.map((record) => (
+                  <TableRow key={record.id}>
+                    <TableCell>{record.user_id}</TableCell>
+                    <TableCell>{record.date}</TableCell>
+                    <TableCell>{record.check_in_time}</TableCell>
+                    <TableCell>{record.check_in_description}</TableCell>
+                    <TableCell>{record.check_out_time}</TableCell>
+                    <TableCell>{record.check_out_description}</TableCell>
+                    <TableCell>{record.status}</TableCell>
+                    <TableCell>{record.created_at}</TableCell>
+                    <TableCell>{record.updated_at}</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </CardContent>
@@ -100,32 +155,50 @@ export default function UserDashboard() {
 
         {/* Check-In Modal */}
         <Dialog open={openCheckInModal} onClose={() => setOpenCheckInModal(false)}>
-          <DialogTitle>Check-In Description</DialogTitle>
+          <DialogTitle>Check-In</DialogTitle>
           <DialogContent>
             <form onSubmit={handleSubmit(handleCheckInSubmit)}>
               <Controller
-                name="checkInDescription"
+              disabled
+                name="user_id"
+                control={control}
+                defaultValue={userData?.user_id}
+                rules={{ required: "Employee ID is required" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Employee ID"
+                    fullWidth
+                    margin="normal"
+                    error={!!errors.user_id}
+                    helperText={errors.user_id?.message}
+                  />
+                )}
+              />
+              <Controller
+                name="checkin_description"
                 control={control}
                 defaultValue=""
                 rules={{ required: "Description is required", minLength: 10 }}
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Describe your check-in"
+                    label="Check-In Description"
                     fullWidth
-                    error={!!errors.checkInDescription}
-                    helperText={
-                      errors.checkInDescription
-                        ? "Please enter at least 10 characters"
-                        : ""
-                    }
+                    margin="normal"
                     multiline
+                    rows={4}
+                    error={!!errors.checkin_description}
+                    helperText={errors.checkin_description?.message}
                   />
                 )}
               />
               <DialogActions>
-                <Button type="submit" variant="contained" color="primary">
-                  Submit
+                <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                  {loading ? <CircularProgress size={24} /> : "Submit"}
+                </Button>
+                <Button onClick={() => setOpenCheckInModal(false)} color="default">
+                  Cancel
                 </Button>
               </DialogActions>
             </form>
@@ -134,32 +207,66 @@ export default function UserDashboard() {
 
         {/* Check-Out Modal */}
         <Dialog open={openCheckOutModal} onClose={() => setOpenCheckOutModal(false)}>
-          <DialogTitle>Check-Out Description</DialogTitle>
+          <DialogTitle>Check-Out</DialogTitle>
           <DialogContent>
             <form onSubmit={handleSubmit(handleCheckOutSubmit)}>
               <Controller
-                name="checkOutDescription"
+                name="user_id"
+                control={control}
+                defaultValue=""
+                rules={{ required: "User ID is required" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="User ID"
+                    fullWidth
+                    margin="normal"
+                    error={!!errors.user_id}
+                    helperText={errors.user_id?.message}
+                  />
+                )}
+              />
+              <Controller
+                name="check_out_time"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Check-out time is required" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Check-Out Time"
+                    type="datetime-local"
+                    fullWidth
+                    margin="normal"
+                    error={!!errors.check_out_time}
+                    helperText={errors.check_out_time?.message}
+                  />
+                )}
+              />
+              <Controller
+                name="check_out_description"
                 control={control}
                 defaultValue=""
                 rules={{ required: "Description is required", minLength: 10 }}
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    label="Describe your check-out"
+                    label="Check-Out Description"
                     fullWidth
-                    error={!!errors.checkOutDescription}
-                    helperText={
-                      errors.checkOutDescription
-                        ? "Please enter at least 10 characters"
-                        : ""
-                    }
+                    margin="normal"
                     multiline
+                    rows={4}
+                    error={!!errors.check_out_description}
+                    helperText={errors.check_out_description?.message}
                   />
                 )}
               />
               <DialogActions>
-                <Button type="submit" variant="contained" color="secondary">
-                  Submit
+                <Button type="submit" variant="contained" color="secondary" disabled={loading}>
+                  {loading ? <CircularProgress size={24} /> : "Submit"}
+                </Button>
+                <Button onClick={() => setOpenCheckOutModal(false)} color="default">
+                  Cancel
                 </Button>
               </DialogActions>
             </form>
