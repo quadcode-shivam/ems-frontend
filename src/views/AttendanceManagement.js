@@ -230,10 +230,10 @@ const SearchAndAddSection = ({ employeeId, setEmployeeId, status, setStatus, ran
       maxDate={new Date()}
       style={{ marginRight: "16px" }}
     />
-    <Button className="btn w-100 border border-2 pt-2 ml-1" style={{ background: "#465CC1" }} onClick={onReportSearch}>
-      <span className="text-light fw-bold" style={{ fontSize: "12px" }}>Search</span>
+    <Button className="btnborder border-2 pt-2 ml-2" style={{ background: "#080B0F" , minWidth:"100px"}} onClick={onReportSearch}>
+      <span className="text-light fw-bold" style={{ fontSize: "14px" }}>Search</span>
     </Button>
-    <Button className="btn w-100 border border-2 pt-2 ml-3" onClick={onAddAttendance} style={{ background: "#465CC1", color: "#fff", minWidth: "170px", fontSize: "12px" }}>
+    <Button className="btn w-100 border border-2 pt-2 ml-3" onClick={onAddAttendance} style={{ background: "#080B0F", color: "#fff", minWidth: "170px", fontSize: "14px" }}>
       Add Attendance
     </Button>
   </div>
@@ -298,7 +298,7 @@ const getStatusColor = (status) => {
 
 const tableHeadStyle = {
   borderRadius: "20px",
-  background: "#465CC1",
+  background: "#080B0F",
   overflow: "hidden",
 };
 

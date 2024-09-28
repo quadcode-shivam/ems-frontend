@@ -10,6 +10,60 @@ const createEmployee = async (data) => {
   return res.data;
 };
 
+const registerUser = async (data) => {
+  try {
+    const res = await api.post("register", data); // Assuming the register route is /api/register
+    return res.data;
+  } catch (error) {
+    console.error("Error registering user:", error);
+    throw error; // Rethrow the error for handling in the calling function
+  }
+};
+
+const loginUser = async (data) => {
+  try {
+    const res = await api.post("login", data); // Assuming the login route is /api/login
+    return res.data;
+  } catch (error) {
+    console.error("Error logging in:", error);
+    throw error; // Rethrow the error for handling in the calling function
+  }
+};
+
+
+const checkIn = async (employeeId) => {
+  try {
+    const res = await api.post("/check-in", { user_id: employeeId });
+    return res.data;
+  } catch (error) {
+    console.error("Error during check-in:", error);
+    throw error;
+  }
+};
+
+// Check-Out API Call
+const checkOut = async (employeeId) => {
+  try {
+    const res = await api.post("/check-out", { user_id: employeeId });
+    return res.data;
+  } catch (error) {
+    console.error("Error during check-out:", error);
+    throw error;
+  }
+};
+
+// In your API file
+const fetchCheckInRecords = async (params) => {
+  try {
+    const response = await api.post("checkrecord", params); // Adjust endpoint as needed
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching check-in records:", error);
+    throw error;
+  }
+};
+
+
 const fetchEmployees = async (currentPage, itemsPerPage, rangeDate) => {
   try {
     const response = await api.post("admin/employees/fetch", {
@@ -174,6 +228,11 @@ const fetchSettings = async (currentPage, itemsPerPage) => {
 };
 
 export {
+  loginUser,
+  registerUser,
+  checkIn,
+  checkOut,
+  fetchCheckInRecords,
   fetchDesignationsAndPositionsApi,
   createEmployee,
   fetchEmployees,

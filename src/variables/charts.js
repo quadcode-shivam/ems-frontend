@@ -249,9 +249,9 @@ const dashboardShippedProductsChart = {
       datasets: [
         {
           label: "Active Users",
-          borderColor: "#465CC1",
+          borderColor: "#080B0F",
           pointBorderColor: "#FFF",
-          pointBackgroundColor: "#465CC1",
+          pointBackgroundColor: "#080B0F",
           pointBorderWidth: 2,
           pointHoverRadius: 4,
           pointHoverBorderWidth: 1,
@@ -321,7 +321,7 @@ const dashboard24HoursPerformanceChart = {
     // Create a gradient fill
     const gradientFill = ctx.createLinearGradient(0, 170, 0, 50);
     gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)"); // Transparent at the top
-    gradientFill.addColorStop(1, hexToRGB("#465CC1", 0.6)); // Semi-transparent color
+    gradientFill.addColorStop(1, hexToRGB("#080B0F", 0.6)); // Semi-transparent color
 
     return {
       labels: [
@@ -333,9 +333,9 @@ const dashboard24HoursPerformanceChart = {
         {
           label: "Active Countries",
           backgroundColor: gradientFill,
-          borderColor: "#465CC1", // Cleaned up extra space
+          borderColor: "#080B0F", // Cleaned up extra space
           pointBorderColor: "#FFF",
-          pointBackgroundColor: "#465CC1", // Cleaned up extra space
+          pointBackgroundColor: "#080B0F", // Cleaned up extra space
           pointBorderWidth: 2,
           pointHoverRadius: 4,
           pointHoverBorderWidth: 1,

@@ -15,12 +15,12 @@ import routes from "routes.js";
 function DemoNavbar(props) {
   const location = useLocation();
   const [isOpen, setIsOpen] = React.useState(false);
-  const [color, setColor] = React.useState("#465CC1");
+  const [color, setColor] = React.useState("#080B0F");
   const sidebarToggle = React.useRef();
 
   const toggle = () => {
     setIsOpen(!isOpen);
-    setColor(isOpen ? "#465CC1" : "#4a5a5f"); 
+    setColor(isOpen ? "#080B0F" : "#4a5a5f"); 
   };
 
   const getBrand = () => {
@@ -45,7 +45,7 @@ function DemoNavbar(props) {
 
   React.useEffect(() => {
     const updateColor = () => {
-      setColor(window.innerWidth < 993 && isOpen ? "#4a5a5f" : "#465CC1"); // Adjust color on resize
+      setColor(window.innerWidth < 993 && isOpen ? "#4a5a5f" : "#080B0F"); // Adjust color on resize
     };
 
     window.addEventListener("resize", updateColor);
@@ -61,7 +61,7 @@ function DemoNavbar(props) {
 
   return (
     <Navbar
-      style={{ backgroundColor: location.pathname.includes("full-screen-maps") ? "#465CC1" : color }}
+      style={{ backgroundColor: location.pathname.includes("full-screen-maps") ? "#080B0F" : color }}
       expand="lg"
       className="navbar-absolute fixed-top"
     >

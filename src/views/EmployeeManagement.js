@@ -164,7 +164,7 @@ export default function EmployeeManagement() {
           >
             <Typography variant="h4">Employee Management</Typography>
             <div
-              className="bg-primary p-1"
+              className=" p-1"
               style={{ display: "flex", alignItems: "center" }}
             >
               <input
@@ -187,8 +187,8 @@ export default function EmployeeManagement() {
                 style={{ marginRight: "16px" }}
               />
               <Button
-                className="btn w-100 border border-2 pt-2 ml-1"
-                style={{ background: "#465CC1", color: "#fff" }}
+                className="btnborder border-2 pt-2 ml-1"
+                style={{ background: "#080B0F", color: "#fff", minWidth:"100px" }}
                 onClick={loadEmployees}
               >
                 <span className="fw-bold" style={{ fontSize: "14px" }}>
@@ -197,7 +197,7 @@ export default function EmployeeManagement() {
               </Button>
               <Button
                 className="btn w-100 border border-2 pt-2 ml-4"
-                style={{ background: "#465CC1", color: "#fff" }}
+                style={{ background: "#080B0F", color: "#fff" }}
                 onClick={() => setOpenModal(true)}
               >
                 <span
@@ -212,7 +212,7 @@ export default function EmployeeManagement() {
 
           <CardContent>
             <Table className="table-responsive">
-              <TableHead style={{ background: "#465CC1", color: "#fff" }}>
+              <TableHead style={{ background: "#080B0F", color: "#fff" }}>
                 <TableRow>
                   <TableCell style={cellStyle}>Name</TableCell>
                   <TableCell style={cellStyle}>Email</TableCell>

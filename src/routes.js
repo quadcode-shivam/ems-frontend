@@ -5,7 +5,7 @@ import LeaveManagement from "views/LeaveManagement"; // New
 import TaskManagement from "views/TaskManagement"; // New
 import TaskCommentManagement from "views/TaskCommentManagement"; // New
 import SettingManagement from "views/SettingManagement"; // New
-import UserDashboard from "views/user/UserDashboard";
+import UserDashboard from "views/UserDashboard";
 
 var dashRoutes = [
   {
@@ -30,6 +30,13 @@ var dashRoutes = [
     layout: "/admin",
   },
   {
+    path: "/user/dashboard",
+    name: "User Attendance",
+    icon: "design-2_ruler-pencil",
+    component: <UserDashboard />,
+    layout: "/admin",
+  },
+  {
     path: "/leaves",
     name: "Leave Management",
     icon: "design-2_ruler-pencil",
@@ -43,48 +50,7 @@ var dashRoutes = [
     component: <TaskManagement />,
     layout: "/admin",
   },
-  {
-    path: "/task-comments",
-    name: "Task Comments",
-    icon: "design-2_ruler-pencil",
-    component: <TaskCommentManagement />,
-    layout: "/admin",
-  },
-  {
-    path: "/settings",
-    name: "Settings",
-    icon: "design-2_ruler-pencil",
-    component: <SettingManagement />,
-    layout: "/admin",
-  },
-  {
-    path: "/user",
-    name: "Attendance Management",
-    icon: "design-2_ruler-pencil",
-    component: <UserDashboard />,
-    layout: "/admin",
-  },
-  {
-    path: "user/attendance",
-    name: "User Attendance",
-    icon: "design-2_ruler-pencil",
-    component: <UserDashboard />, // Same component
-    layout: "/admin",
-  },
-  {
-    path: "user/tasks",
-    name: "Tasks",
-    icon: "design-2_ruler-pencil",
-    component: <UserDashboard />, // Same component
-    layout: "/admin",
-  },
-  {
-    path: "user/view-leave",
-    name: "View Leave",
-    icon: "design-2_ruler-pencil", // Example icon
-    component: <UserDashboard />, // Same component
-    layout: "/admin",
-  }
+  
 ];
 
 export default dashRoutes;
