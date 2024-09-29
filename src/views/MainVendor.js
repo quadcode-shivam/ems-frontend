@@ -153,7 +153,7 @@ export default function MainVendor() {
                   maxDate={new Date()}
                 />
               </div>
-              <Button className="btn w-75" style={{background:"#080B0F", minHeight:"40px"}} onClick={onReportSearch}>
+              <Button className="btn w-75" style={{background:"#12131A", minHeight:"40px"}} onClick={onReportSearch}>
                 <span className="text-light ">Search</span>
               </Button>
             </div>
@@ -170,7 +170,7 @@ export default function MainVendor() {
                 <TableHead
                   style={{
                     borderRadius: "20px 20px 20px 20px",
-                    background: "#080B0F",
+                    background: "#12131A",
                     overflow: "hidden",
                   }}
                 >

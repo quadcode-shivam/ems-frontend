@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { fetchAttendance, createAttendance, actionAttendApi } from "api";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import '../assets/css/demo.css'
 import {
   Table,
   TableHead,
@@ -105,7 +106,7 @@ const AttendanceManagement = () => {
     <>
       <DemoNavbar size="sm" />
       <div style={{ marginTop: "80px" }}>
-        <Card className="p-3" style={{ background: "transparent" }}>
+        <Card className="p-3 " style={{ background: "transparent" }}>
           <CardHeader style={headerStyle}>
             <Typography variant="h4" style={{ fontSize: "30px" }}>
               Manage Attendance
@@ -160,7 +161,7 @@ const SummaryCard = ({ title, count }) => {
   const cardColor = getCardColor(title);
   return (
     <Card
-      className={`text-light fw-bold`}
+      className={`text-light fw-bold `}
       style={{ backgroundColor: cardColor, flex: 1, margin: "0 8px" }}
     >
       <CardContent>
@@ -230,10 +231,10 @@ const SearchAndAddSection = ({ employeeId, setEmployeeId, status, setStatus, ran
       maxDate={new Date()}
       style={{ marginRight: "16px" }}
     />
-    <Button className="btnborder border-2 pt-2 ml-2" style={{ background: "#080B0F" , minWidth:"100px"}} onClick={onReportSearch}>
+    <Button className="btnborder border-2 pt-2 ml-2" style={{ background: "#12131A" , minWidth:"100px"}} onClick={onReportSearch}>
       <span className="text-light fw-bold" style={{ fontSize: "14px" }}>Search</span>
     </Button>
-    <Button className="btn w-100 border border-2 pt-2 ml-3" onClick={onAddAttendance} style={{ background: "#080B0F", color: "#fff", minWidth: "170px", fontSize: "14px" }}>
+    <Button className="btn w-100 border border-2 pt-2 ml-3" onClick={onAddAttendance} style={{ background: "#12131A", color: "#fff", minWidth: "170px", fontSize: "14px" }}>
       Add Attendance
     </Button>
   </div>
@@ -298,7 +299,7 @@ const getStatusColor = (status) => {
 
 const tableHeadStyle = {
   borderRadius: "20px",
-  background: "#080B0F",
+  background: "#12131A",
   overflow: "hidden",
 };
 

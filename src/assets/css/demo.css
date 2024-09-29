@@ -3,6 +3,9 @@
   margin-bottom: 20px;
 }
 
+body{
+  font-family: "Roboto Slab", serif;
+}
 .tim-white-buttons {
   background-color: #777777;
 }
@@ -39,12 +42,25 @@
 
 .offline-doc .footer {
   position: absolute;
+  bottom: 100px;
   width: 100%;
   background: transparent;
   bottom: 0;
   color: #fff;
   z-index: 1;
 }
+.footer {
+  color: #ddd;
+  position: fixed;
+  bottom: 0;
+  width: 90%;
+  background-color: #080B0F; /* Customize background color as needed */
+  padding: 10px 0;
+  text-align: center;
+  z-index: 1000; /* Ensures it's above other content */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for better visual separation */
+}
+
 .sidebar .nav > li.active-pro {
   position: absolute;
   width: 100%;
@@ -76,7 +92,7 @@
 }
 
 .record-card {
-  background-color: #37393C;
+  background-color: #12131A;
   color:#fff;
   font-weight: bold;
   padding: 20px;
@@ -116,4 +132,5 @@
     grid-template-columns: 1fr; /* 1 card per row for mobile screens */
   }
 }
+
 
