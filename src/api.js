@@ -55,7 +55,9 @@ const checkOut = async (employeeId) => {
 // In your API file
 const fetchCheckInRecords = async (params) => {
   try {
-    const response = await api.post("checkrecord", params); // Adjust endpoint as needed
+    const response = await api.post("checkrecord", {
+      user_id:params
+    }); // Adjust endpoint as needed
     return response.data;
   } catch (error) {
     console.error("Error fetching check-in records:", error);

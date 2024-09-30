@@ -23,7 +23,7 @@ import Swal from "sweetalert2";
 
 const UserDashboard = () => {
   const [checkInRecords, setCheckInRecords] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [averageCheckInTime, setAverageCheckInTime] = useState(null);
@@ -154,12 +154,13 @@ const UserDashboard = () => {
   return (
     <>
       <DemoNavbar size="sm" />
+      {loading == true && <Loader />}
       <div
-        className="dashboard-container"
+        className="dashboard-container h-100"
         style={{
           marginTop: "50px",
           marginBottom: "30px",
-          background: "#3B3E44",
+          background: "#0F1214",
           color: "#ffffff",
         }}
       >
@@ -168,7 +169,7 @@ const UserDashboard = () => {
           style={{
             padding: "10px",
             marginTop: "20px",
-            background: "#12131A",
+            background: "#11171D",
             borderRadius: "20px",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
             cursor: "pointer",
@@ -231,7 +232,7 @@ const UserDashboard = () => {
                   gridTemplateColumns: "repeat(4, 1fr)",
                   gap: "15px",
                   fontSize: "20px",
-                  background:""
+                  background: "",
                 }}
               >
                 <div
@@ -347,7 +348,7 @@ const UserDashboard = () => {
               <div
                 className="px-3"
                 style={{
-                  paddingTop: "25px",
+                  paddingTop: "20px",
                   background: "#3b3e44",
                   borderRadius: "5px",
                   display: "flex",
@@ -356,12 +357,17 @@ const UserDashboard = () => {
                 }}
               >
                 <p>Average Check Ins :</p>
-                <p>{averageCheckInTime}</p>
+                <p>
+                  {new Date(averageCheckInTime).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
               </div>
               <div
                 className="px-3"
                 style={{
-                  paddingTop: "25px",
+                  paddingTop: "20px",
                   background: "#3b3e44",
                   borderRadius: "5px",
                   display: "flex",
@@ -370,34 +376,39 @@ const UserDashboard = () => {
                 }}
               >
                 <p>Average Check Outs :</p>
-                <p>{averageCheckOutTime}</p>{" "}
+                <p>
+                  {new Date(averageCheckOutTime).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>{" "}
               </div>
               <div
                 style={{
                   padding: "4px",
-                  background: "green",
                   borderRadius: "5px",
                 }}
               >
                 <Button
-                  className="w-100 h-100 m-0 p-0 bg-secondary text-success "
-                  style={{ fontSize: "24px", fontWeight:"600" }}
+                  className="w-100 h-100 m-0 p-0 "
+                  style={{ fontSize: "24px", fontWeight: "600",  background: "#7289da",
+                    color: "#ffffff", }}
                   onClick={handleCheckIn}
                 >
-                  <CheckCircleIcon style={{ fontSize:"30px" }} /> CHECK IN
+                  <CheckCircleIcon style={{ fontSize: "30px" }} /> CHECK IN
                 </Button>
               </div>
               <div
                 style={{
                   padding: "4px",
-                  background: "red",
                   borderRadius: "5px",
                   textAlign: "center",
                 }}
               >
                 <Button
-                  className="w-100 h-100 m-0 p-0 bg-secondary text-danger"
-                  style={{ fontSize: "24px" }}
+                  className="w-100 h-100 m-0 p-0"
+                  style={{ fontSize: "24px" , fontWeight: "600",   background: "#7289da",
+                    color: "#ffffff",}}
                   onClick={() => {
                     Swal.fire({
                       title: "Are you sure?",
@@ -415,7 +426,7 @@ const UserDashboard = () => {
                     });
                   }}
                 >
-                 <CheckCircleIcon style={{ fontSize:"30px" }} />  CHECK OUT
+                  <CheckCircleIcon style={{ fontSize: "30px" }} /> CHECK OUT
                 </Button>
               </div>
             </div>
@@ -425,105 +436,131 @@ const UserDashboard = () => {
         {loading ? (
           <p className="loading">Loading...</p>
         ) : error ? (
-          <p className="error">{error}</p>
+          <p className="error">
+            {" "}
+            <Card
+              className="record-card border-0 p-1 p-4 h-25 text-center"
+              style={{ width: "100%" }}
+            >
+              <p className="no-records">
+                Current Employee have not any previous record
+              </p>
+            </Card>
+          </p>
         ) : (
-          <div className="card-grid">
+          <>
             {checkInRecords.length === 0 ? (
-              <p className="no-records">No check-in records found.</p>
+              <Card
+                className="record-card border-0 p-1 p-4 h-25 text-center"
+                style={{ width: "100%" }}
+              >
+                <p className="no-records">
+                  Current Employee have not any previous record
+                </p>
+              </Card>
             ) : (
-              checkInRecords.map((record, index) => (
-                <div key={index}>
-                  <Card className="record-card border-0 p-1 h-100">
-                    <CardHeader
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      {record.employee_id}
-                      <span
-                        className="badge"
-                        style={{
-                          backgroundColor: getStatusBadgeStyle(record.status),
-                          color: "white",
-                          padding: "5px 10px",
-                          borderRadius: "5px",
-                        }}
-                      >
-                        {record.status || "N/A"}
-                      </span>
-                    </CardHeader>
-                    <CardContent className="card-content">
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <p>Role: {record.role || "N/A"}</p>
-                        <p>
-                          {new Date(record.check_in_time).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </CardContent>
-                    <CardFooter
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginTop: "10px",
-                      }}
-                    >
-                      <p>
-                        <div
-                          className="badge"
+              <>{""}</>
+            )}
+            <div className="card-grid">
+              {checkInRecords.length === 0
+                ? null
+                : checkInRecords.map((record, index) => (
+                    <div key={index}>
+                      <Card className="record-card border-0 p-1 h-100">
+                        <CardHeader
                           style={{
-                            color: "white",
-                            padding: "5px 10px",
-                            borderRadius: "5px",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
                           }}
-                          class="bg-secondary mr-2"
                         >
-                          <span>Check In: </span>
-                          {new Date(record.check_in_time).toLocaleTimeString(
-                            [],
-                            {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }
-                          )}
-                        </div>
-                      </p>
-                      <p>
-                        {record.check_out_time == null ? (
-                          <><AccessTimeIcon/></>
-                        ) : (
-                          <div
+                          {record.employee_id}
+                          <span
                             className="badge"
                             style={{
+                              backgroundColor: getStatusBadgeStyle(
+                                record.status
+                              ),
                               color: "white",
                               padding: "5px 10px",
                               borderRadius: "5px",
                             }}
-                            class="bg-secondary"
                           >
-                            <span>Check Out: </span>
-                            {new Date(record.check_out_time).toLocaleTimeString(
-                              [],
-                              {
+                            {record.status || "N/A"}
+                          </span>
+                        </CardHeader>
+                        <CardContent className="card-content">
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <p>Role: {record.role || "N/A"}</p>
+                            <p>
+                              {new Date(
+                                record.check_in_time
+                              ).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </CardContent>
+                        <CardFooter
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginTop: "10px",
+                          }}
+                        >
+                          <p>
+                            <div
+                              className="badge"
+                              style={{
+                                color: "white",
+                                padding: "5px 10px",
+                                borderRadius: "5px",
+                              }}
+                              class="bg-secondary mr-2"
+                            >
+                              <span>Check In: </span>
+                              {new Date(
+                                record.check_in_time
+                              ).toLocaleTimeString([], {
                                 hour: "2-digit",
                                 minute: "2-digit",
-                              }
+                              })}
+                            </div>
+                          </p>
+                          <p>
+                            {record.check_out_time == null ? (
+                              <>
+                                <AccessTimeIcon />
+                              </>
+                            ) : (
+                              <div
+                                className="badge"
+                                style={{
+                                  color: "white",
+                                  padding: "5px 10px",
+                                  borderRadius: "5px",
+                                }}
+                                class="bg-secondary"
+                              >
+                                <span>Check Out: </span>
+                                {new Date(
+                                  record.check_out_time
+                                ).toLocaleTimeString([], {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </div>
                             )}
-                          </div>
-                        )}
-                      </p>
-                    </CardFooter>
-                  </Card>
-                </div>
-              ))
-            )}
-          </div>
+                          </p>
+                        </CardFooter>
+                      </Card>
+                    </div>
+                  ))}
+            </div>
+          </>
         )}
         <ToastContainer />
       </div>

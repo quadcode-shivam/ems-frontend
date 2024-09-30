@@ -24,6 +24,7 @@ import {
   DropdownItem,
 } from "reactstrap";
 import PaginationComponent from "components/pagination/PaginationComponent";
+import Loader from "./Loader/Loader";
 
 const AttendanceManagement = () => {
   const [attendanceRecords, setAttendanceRecords] = useState([]);
@@ -117,10 +118,11 @@ const AttendanceManagement = () => {
   return (
     <>
       <DemoNavbar size="sm" />
-      <div style={{ marginTop: "80px" }}>
+      {loading == true && <Loader />}
+      <div style={{marginTop: "60px", minHeight: "100%", background: "#0F1214"  }}>
         <Card className="p-3 " style={{ background: "transparent" }}>
           <CardHeader style={headerStyle}>
-            <Typography variant="h4" style={{ fontSize: "30px" }}>
+            <Typography variant="h4" className="text-light" style={{ fontSize: "30px" }}>
               Manage Attendance
             </Typography>
             <SearchAndAddSection
@@ -141,6 +143,7 @@ const AttendanceManagement = () => {
               onActionAttend={actionAttend}
             />
             <PaginationComponent
+            className="border border-1"
               totalItems={totalItems}
               itemsPerPage={itemsPerPage}
               currentPage={currentPage}
@@ -325,9 +328,9 @@ const SearchAndAddSection = ({
   </div>
 );
 const AttendanceTable = ({ records, onActionAttend }) => (
-  <div style={{ borderRadius: "20px", overflow: "hidden" }}>
+  <div style={{  overflow: "hidden" }}>
     <Table className="table-responsive table-striped">
-      <TableHead style={tableHeadStyle}>
+      <TableHead className="bg-secondary rounded">
         <TableRow>
           <TableCell style={{ color: "#fff" }}>Employee ID</TableCell>
           <TableCell style={{ color: "#fff" }}>Check-In Time</TableCell>
@@ -336,17 +339,17 @@ const AttendanceTable = ({ records, onActionAttend }) => (
           <TableCell style={{ color: "#fff" }}>Action</TableCell>
         </TableRow>
       </TableHead>
-      <TableBody>
+      <TableBody >
         {records.map((record) => (
           <TableRow key={record.id}>
-            <TableCell>{record.user_id}</TableCell>
-            <TableCell>
+            <TableCell style={{ background:"#11171D", color:"white" }}>{record.user_id}</TableCell>
+            <TableCell style={{ background:"#11171D", color:"white" }}>
               {record.check_in_time ? record.check_in_time : "----------"}
-            </TableCell>
-            <TableCell>
+            </TableCell >
+            <TableCell style={{ background:"#11171D", color:"white" }}>
               {record.check_out_time ? record.check_out_time : "----------"}
             </TableCell>
-            <TableCell>
+            <TableCell style={{ background:"#11171D", color:"white" }}>
               {record.status == "fullday" && (
                 <span className={`badge p-2 fs-2 bg-success`}>
                   {record.status}
@@ -374,7 +377,7 @@ const AttendanceTable = ({ records, onActionAttend }) => (
               )}
             </TableCell>
 
-            <TableCell>
+            <TableCell style={{ background:"#11171D", color:"white" }}>
               <UncontrolledDropdown>
                 <DropdownToggle
                   tag="a"

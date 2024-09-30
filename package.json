@@ -25,6 +25,7 @@
     "react-datepicker": "^7.3.0",
     "react-dom": ">=16.8.0",
     "react-hook-form": "^7.53.0",
+    "react-loading-indicators": "^1.0.0",
     "react-notification-alert": "0.0.13",
     "react-paginate": "^8.2.0",
     "react-router-dom": "6.11.1",
