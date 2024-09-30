@@ -32,11 +32,18 @@ import {
   fetchDesignationsAndPositionsApi,
 } from "api";
 import { toast } from "react-toastify";
+import {
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
+} from "reactstrap";
 
 export default function EmployeeManagement() {
   const cellStyle = {
     color: "#fff",
     fontWeight: "bold",
+    textAlign: "center",
   };
 
   const [employees, setEmployees] = useState([]);
@@ -69,7 +76,11 @@ export default function EmployeeManagement() {
   const loadEmployees = async () => {
     setLoading(true);
     try {
-      const response = await fetchEmployees(currentPage, itemsPerPage, rangeDate);
+      const response = await fetchEmployees(
+        currentPage,
+        itemsPerPage,
+        rangeDate
+      );
       setEmployees(response.data);
       setTotalItems(response.total);
       setError(null);
@@ -140,7 +151,7 @@ export default function EmployeeManagement() {
   }, [currentPage, itemsPerPage]);
 
   const filteredEmployees = employees.filter((employee) =>
-    employee.user_name.toLowerCase().includes(search.toLowerCase())
+    employee.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const getStatusLabel = (status) => {
@@ -188,7 +199,11 @@ export default function EmployeeManagement() {
               />
               <Button
                 className="btnborder border-2 pt-2 ml-1"
-                style={{ background: "#080B0F", color: "#fff", minWidth:"100px" }}
+                style={{
+                  background: "#080B0F",
+                  color: "#fff",
+                  minWidth: "100px",
+                }}
                 onClick={loadEmployees}
               >
                 <span className="fw-bold" style={{ fontSize: "14px" }}>
@@ -211,14 +226,13 @@ export default function EmployeeManagement() {
           </div>
 
           <CardContent>
-            <Table className="table-responsive">
+            <Table className="table-responsive table-striped ">
               <TableHead style={{ background: "#080B0F", color: "#fff" }}>
                 <TableRow>
-                  <TableCell style={cellStyle}>Name</TableCell>
-                  <TableCell style={cellStyle}>Email</TableCell>
-                  <TableCell style={cellStyle}>Phone</TableCell>
+                  <TableCell style={cellStyle}>User Detail</TableCell>
+                  <TableCell style={cellStyle}>Contact Detail</TableCell>
+                  <TableCell style={cellStyle}>Designation</TableCell>
                   <TableCell style={cellStyle}>Position</TableCell>
-                  <TableCell style={cellStyle}>Department</TableCell>
                   <TableCell style={cellStyle}>Hire Date</TableCell>
                   <TableCell style={cellStyle}>Status</TableCell>
                   <TableCell style={cellStyle}>Action</TableCell>
@@ -227,23 +241,95 @@ export default function EmployeeManagement() {
               <TableBody>
                 {filteredEmployees.map((employee) => (
                   <TableRow key={employee.id}>
-                    <TableCell>{employee.user_name}</TableCell>
-                    <TableCell>{employee.user_email}</TableCell>
-                    <TableCell>{employee.phone || "N/A"}</TableCell>
-                    <TableCell>{employee.position}</TableCell>
-                    <TableCell>{employee.department}</TableCell>
-                    <TableCell>
-                      {new Date(employee.hire_date).toLocaleDateString()}
+                    <TableCell className="text-center">
+                      {employee.name}
+                      <br />
+                      <span className={`badge p-2 fs-2 bg-warning`}>
+                        {employee.user_id}
+                      </span>
                     </TableCell>
-                    <TableCell>
-                      <Badge
-                        color={employee.status === "active" ? "success" : "error"}
-                        badgeContent={getStatusLabel(employee.status)}
-                      />
+                    <TableCell className="text-center">
+                      {employee.email}
+                      <br />
+                      <span
+                        className={`badge p-2 fs-2 bg-secondary text-light`}
+                      >
+                        {employee.mobile}
+                      </span>
                     </TableCell>
-                    <TableCell>
-                      <Button onClick={() => deleteEmployees(employee.id)}>Remove</Button>
-                      <Button onClick={() => console.log(`View data for employee ID: ${employee.id}`)}>View Data</Button>
+                    <TableCell className="text-center">
+                      {employee.designation}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {employee.position}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {employee.date_hired}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {employee.status == "active" && (
+                        <span className={`badge p-2 fs-2 bg-success`}>
+                          {employee.status}
+                        </span>
+                      )}
+                      {employee.status == "suspend" && (
+                        <span
+                          className={`badge p-2 fs-2 bg-secondary text-light`}
+                        >
+                          {employee.status}
+                        </span>
+                      )}
+                      {employee.status == "inactive" && (
+                        <span className={`badge p-2 fs-2 bg-danger`}>
+                          {employee.status}
+                        </span>
+                      )}
+                      {employee.status == "hold" && (
+                        <span className={`badge p-2 fs-2 bg-warning`}>
+                          {employee.status}
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <UncontrolledDropdown>
+                        <DropdownToggle
+                          tag="a"
+                          href="#more"
+                          onClick={(ev) => ev.preventDefault()}
+                          className="btn btn-icon bg-primary btn-sm"
+                          style={{ borderRadius: "50px" }}
+                        >
+                          <span
+                            style={{
+                              fontSize: "20px",
+                              fontWeight: "600",
+                              lineHeight: "23px",
+                            }}
+                          >
+                            ...
+                          </span>
+                        </DropdownToggle>
+                        <DropdownMenu right>
+                          <DropdownItem
+                            tag="a"
+                            href="#remove"
+                            onClick={() => deleteEmployees(employee.user_id)}
+                          >
+                            <span>Remove Employee</span>
+                          </DropdownItem>
+                          <DropdownItem
+                            tag="a"
+                            href="#remove"
+                            onClick={() =>
+                              console.log(
+                                `View data for employee ID: ${employee.user_id}`
+                              )
+                            }
+                          >
+                            <span>View Profile</span>
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -310,22 +396,22 @@ export default function EmployeeManagement() {
                     />
                   )}
                 />
-                  <Controller
-                    name="address"
-                    control={control}
-                    defaultValue=""
-                    rules={{ required: "Address is required" }}
-                    render={({ field }) => (
-                      <TextField
-                        className="mb-3 mt-2"
-                        {...field}
-                        label="Address"
-                        fullWidth
-                        error={!!errors.address}
-                        helperText={errors.address?.message}
-                      />
-                    )}
-                  />
+                <Controller
+                  name="address"
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: "Address is required" }}
+                  render={({ field }) => (
+                    <TextField
+                      className="mb-3 mt-2"
+                      {...field}
+                      label="Address"
+                      fullWidth
+                      error={!!errors.address}
+                      helperText={errors.address?.message}
+                    />
+                  )}
+                />
                 <Controller
                   name="state"
                   control={control}
@@ -372,12 +458,19 @@ export default function EmployeeManagement() {
                       <InputLabel>Designation</InputLabel>
                       <Select {...field}>
                         {designations.map((designation) => (
-                          <MenuItem key={designation.id} value={designation.title}>
+                          <MenuItem
+                            key={designation.id}
+                            value={designation.title}
+                          >
                             {designation.title}
                           </MenuItem>
                         ))}
                       </Select>
-                      {errors.designation && <span className="text-danger">{errors.designation.message}</span>}
+                      {errors.designation && (
+                        <span className="text-danger">
+                          {errors.designation.message}
+                        </span>
+                      )}
                     </FormControl>
                   )}
                 />
@@ -400,7 +493,11 @@ export default function EmployeeManagement() {
                           </MenuItem>
                         ))}
                       </Select>
-                      {errors.position && <span className="text-danger">{errors.position.message}</span>}
+                      {errors.position && (
+                        <span className="text-danger">
+                          {errors.position.message}
+                        </span>
+                      )}
                     </FormControl>
                   )}
                 />
@@ -420,12 +517,19 @@ export default function EmployeeManagement() {
                         <MenuItem value="admin">Admin</MenuItem>
                         <MenuItem value="employee">Employee</MenuItem>
                       </Select>
-                      {errors.account_type && <span className="text-danger">{errors.account_type.message}</span>}
+                      {errors.account_type && (
+                        <span className="text-danger">
+                          {errors.account_type.message}
+                        </span>
+                      )}
                     </FormControl>
                   )}
                 />
                 <DialogActions>
-                  <Button type="submit" className="bg-primary text-light fw-bold pt-2">
+                  <Button
+                    type="submit"
+                    className="bg-primary text-light fw-bold pt-2"
+                  >
                     Add Employee
                   </Button>
                 </DialogActions>

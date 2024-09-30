@@ -15,7 +15,13 @@ import {
   Badge,
 } from "@mui/material";
 import DemoNavbar from "components/Navbars/DemoNavbar";
-import { CardHeader, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
+import {
+  CardHeader,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from "reactstrap";
 import PaginationComponent from "components/pagination/PaginationComponent";
 
 const AttendanceManagement = () => {
@@ -47,10 +53,16 @@ const AttendanceManagement = () => {
   const loadAttendance = async () => {
     setLoading(true);
     try {
-      const response = await fetchAttendance(currentPage, itemsPerPage, status, rangeDate.start, rangeDate.end);
+      const response = await fetchAttendance(
+        currentPage,
+        itemsPerPage,
+        status,
+        rangeDate.start,
+        rangeDate.end
+      );
       setAttendanceRecords(response.data);
       setTotalItems(response.total);
-      setTotals(response.totals);
+      setTotals(response.totals); // Update with response structure
     } catch (error) {
       setError("Failed to fetch attendance records.");
     } finally {
@@ -123,7 +135,10 @@ const AttendanceManagement = () => {
           </CardHeader>
           <CardContent>
             <SummaryCards totals={totals} />
-            <AttendanceTable records={attendanceRecords} onActionAttend={actionAttend} />
+            <AttendanceTable
+              records={attendanceRecords}
+              onActionAttend={actionAttend}
+            />
             <PaginationComponent
               totalItems={totalItems}
               itemsPerPage={itemsPerPage}
@@ -149,9 +164,19 @@ const headerStyle = {
 };
 
 const SummaryCards = ({ totals }) => (
-  <div style={{ display: "flex", justifyContent: "space-around", marginBottom: "16px" }}>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "space-around",
+      marginBottom: "16px",
+    }}
+  >
     {Object.entries(totals).map(([key, count]) => (
-      <SummaryCard key={key} title={key.charAt(0).toUpperCase() + key.slice(1)} count={count} />
+      <SummaryCard
+        key={key}
+        title={key.charAt(0).toUpperCase() + key.slice(1)}
+        count={count}
+      />
     ))}
   </div>
 );
@@ -164,9 +189,14 @@ const SummaryCard = ({ title, count }) => {
       style={{ backgroundColor: cardColor, flex: 1, margin: "0 8px" }}
     >
       <CardContent>
-        <Typography variant="h6" style={{ fontSize: "20px" }}>{title}</Typography>
+        <Typography variant="h6" style={{ fontSize: "20px" }}>
+          {title}
+        </Typography>
         <Typography variant="h4" style={{ fontSize: "26px" }}>
-          Total: {count} <span style={{ fontSize: "22px" }}>({count === 0 ? "Zero" : numberToWords(count)})</span>
+          Total: {count}{" "}
+          <span style={{ fontSize: "22px" }}>
+            ({count === 0 ? "Zero" : numberToWords(count)})
+          </span>
         </Typography>
       </CardContent>
     </Card>
@@ -180,23 +210,63 @@ const getCardColor = (title) => {
     case "HalfDayPresent":
       return "#ff9800";
     case "FullDayPresent":
-      return "#388e3c"; 
+      return "#388e3c";
     case "Late":
       return "#1976d2";
     case "Active":
-      return "#388e3c"; 
+      return "#388e3c";
     default:
-      return "#9e9e9e"; 
+      return "#9e9e9e";
   }
 };
 
-
 const numberToWords = (num) => {
-  const words = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty", "Twenty one", "Twenty two", "Twenty three", "Twenty four", "Twenty five", "Twenty six", "Twenty seven", "Twenty eight", "Twenty nine", "Thirty"];
+  const words = [
+    "",
+    "One",
+    "Two",
+    "Three",
+    "Four",
+    "Five",
+    "Six",
+    "Seven",
+    "Eight",
+    "Nine",
+    "Ten",
+    "Eleven",
+    "Twelve",
+    "Thirteen",
+    "Fourteen",
+    "Fifteen",
+    "Sixteen",
+    "Seventeen",
+    "Eighteen",
+    "Nineteen",
+    "Twenty",
+    "Twenty one",
+    "Twenty two",
+    "Twenty three",
+    "Twenty four",
+    "Twenty five",
+    "Twenty six",
+    "Twenty seven",
+    "Twenty eight",
+    "Twenty nine",
+    "Thirty",
+  ];
   return num < 31 ? words[num] : "more than thirty";
 };
 
-const SearchAndAddSection = ({ employeeId, setEmployeeId, status, setStatus, rangeDate, onRangeChange, onReportSearch, onAddAttendance }) => (
+const SearchAndAddSection = ({
+  employeeId,
+  setEmployeeId,
+  status,
+  setStatus,
+  rangeDate,
+  onRangeChange,
+  onReportSearch,
+  onAddAttendance,
+}) => (
   <div style={{ display: "flex", alignItems: "center" }}>
     <input
       type="text"
@@ -230,51 +300,113 @@ const SearchAndAddSection = ({ employeeId, setEmployeeId, status, setStatus, ran
       maxDate={new Date()}
       style={{ marginRight: "16px" }}
     />
-    <Button className="btnborder border-2 pt-2 ml-2" style={{ background: "#080B0F" , minWidth:"100px"}} onClick={onReportSearch}>
-      <span className="text-light fw-bold" style={{ fontSize: "14px" }}>Search</span>
+    <Button
+      className="btnborder border-2 pt-2 ml-2"
+      style={{ background: "#080B0F", minWidth: "100px" }}
+      onClick={onReportSearch}
+    >
+      <span className="text-light fw-bold" style={{ fontSize: "14px" }}>
+        Search
+      </span>
     </Button>
-    <Button className="btn w-100 border border-2 pt-2 ml-3" onClick={onAddAttendance} style={{ background: "#080B0F", color: "#fff", minWidth: "170px", fontSize: "14px" }}>
+    <Button
+      className="btn w-100 border border-2 pt-2 ml-3"
+      onClick={onAddAttendance}
+      style={{
+        background: "#080B0F",
+        color: "#fff",
+        minWidth: "170px",
+        fontSize: "14px",
+      }}
+    >
       Add Attendance
     </Button>
   </div>
 );
-
 const AttendanceTable = ({ records, onActionAttend }) => (
   <div style={{ borderRadius: "20px", overflow: "hidden" }}>
-    <Table className="table-responsive">
+    <Table className="table-responsive table-striped">
       <TableHead style={tableHeadStyle}>
         <TableRow>
-          <TableCell style={cellStyle}>Employee ID</TableCell>
-          <TableCell style={cellStyle}>Employee Name</TableCell>
-          <TableCell style={cellStyle}>Email</TableCell>
-          <TableCell style={cellStyle}>Position</TableCell>
-          <TableCell style={cellStyle}>Date</TableCell>
-          <TableCell style={cellStyle}>Status</TableCell>
-          <TableCell style={cellStyle}>Action</TableCell>
+          <TableCell style={{ color: "#fff" }}>Employee ID</TableCell>
+          <TableCell style={{ color: "#fff" }}>Check-In Time</TableCell>
+          <TableCell style={{ color: "#fff" }}>Check-Out Time</TableCell>
+          <TableCell style={{ color: "#fff" }}>Status</TableCell>
+          <TableCell style={{ color: "#fff" }}>Action</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {records.map((record) => (
           <TableRow key={record.id}>
-            <TableCell>{record.employee_id}</TableCell>
-            <TableCell>{record.employee.name}</TableCell>
-            <TableCell>{record.employee.email}</TableCell>
-            <TableCell>{record.employee.position}</TableCell>
-            <TableCell>{new Date(record.date).toLocaleDateString()}</TableCell>
+            <TableCell>{record.user_id}</TableCell>
             <TableCell>
-              <Badge badgeContent={record.status} color={getStatusColor(record.status)} />
+              {record.check_in_time ? record.check_in_time : "----------"}
             </TableCell>
             <TableCell>
+              {record.check_out_time ? record.check_out_time : "----------"}
+            </TableCell>
+            <TableCell>
+              {record.status == "fullday" && (
+                <span className={`badge p-2 fs-2 bg-success`}>
+                  {record.status}
+                </span>
+              )}
+              {record.status == "present" && (
+                <span className={`badge p-2 fs-2 bg-success`}>
+                  {record.status}
+                </span>
+              )}
+              {record.status == "HalfDayPresent" && (
+                <span className={`badge p-2 fs-2 bg-warning`}>
+                  {record.status}
+                </span>
+              )}
+              {record.status == "absent" && (
+                <span className={`badge p-2 fs-2 bg-danger`}>
+                  {record.status}
+                </span>
+              )}
+              {record.status == "Late" && (
+                <span className={`badge p-2 fs-2 bg-secondary text-light`}>
+                  {record.status}
+                </span>
+              )}
+            </TableCell>
+
+            <TableCell>
               <UncontrolledDropdown>
-                <DropdownToggle tag="a" href="#more" onClick={(ev) => ev.preventDefault()} className="btn btn-icon bg-primary btn-sm" style={{ borderRadius: "50px" }}>
-                  <span style={{ fontSize: "20px", fontWeight: "600", lineHeight: "23px" }}>...</span>
+                <DropdownToggle
+                  tag="a"
+                  href="#more"
+                  onClick={(ev) => ev.preventDefault()}
+                  className="btn btn-icon bg-primary btn-sm"
+                  style={{ borderRadius: "50px" }}
+                >
+                  <span
+                    style={{
+                      fontSize: "20px",
+                      fontWeight: "600",
+                      lineHeight: "23px",
+                    }}
+                  >
+                    ...
+                  </span>
                 </DropdownToggle>
                 <DropdownMenu right>
-                  {["Late", "Present", "Absent", "Halfday", "Fullday"].map((action) => (
-                    <DropdownItem key={action} tag="a" href="#remove" onClick={() => onActionAttend(record.employee_id, action.toLowerCase())}>
-                      <span>{action.toLowerCase()}</span>
-                    </DropdownItem>
-                  ))}
+                  {["Late", "Present", "Absent", "Halfday", "Fullday"].map(
+                    (action) => (
+                      <DropdownItem
+                        key={action}
+                        tag="a"
+                        href="#remove"
+                        onClick={() =>
+                          onActionAttend(record.id, action.toLowerCase())
+                        }
+                      >
+                        <span>{action.toLowerCase()}</span>
+                      </DropdownItem>
+                    )
+                  )}
                 </DropdownMenu>
               </UncontrolledDropdown>
             </TableCell>
@@ -285,26 +417,23 @@ const AttendanceTable = ({ records, onActionAttend }) => (
   </div>
 );
 
-const getStatusColor = (status) => {
-  switch (status) {
-    case "present": return "success";
-    case "absent": return "error";
-    case "halfday": return "warning";
-    case "late": return "primary";
-    case "fullday": return "success";
-    default: return "default";
-  }
-};
-
 const tableHeadStyle = {
-  borderRadius: "20px",
-  background: "#080B0F",
-  overflow: "hidden",
+  background: "#343a40",
 };
 
-const cellStyle = {
-  color: "#fff",
-  fontWeight: "bold",
+const getBadgeColor = (status) => {
+  switch (status) {
+    case "present":
+      return "success";
+    case "absent":
+      return "danger";
+    case "halfday":
+      return "warning";
+    case "late":
+      return "info";
+    default:
+      return "secondary";
+  }
 };
 
 export default AttendanceManagement;
