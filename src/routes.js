@@ -1,18 +1,16 @@
-import Dashboard from "views/Dashboard.js";
+import Dashboards from "views/Dashboards.js";
 import EmployeeManagement from "views/EmployeeManagement"; // New
 import AttendanceManagement from "views/AttendanceManagement"; // New
 import LeaveManagement from "views/LeaveManagement"; // New
-import TaskManagement from "views/TaskManagement"; // New
-import TaskCommentManagement from "views/TaskCommentManagement"; // New
-import SettingManagement from "views/SettingManagement"; // New
+import TaskManagement from "views/TaskManagement";
 import UserDashboard from "views/UserDashboard";
 
 var dashRoutes = [
   {
-    path: "/dashboard",
+    path: "/dashboards",
     name: "Dashboard",
-    icon: "design_app",
-    component: <Dashboard />,
+    icon: "business_briefcase-24",
+    component: <Dashboards />,
     layout: "/admin",
   },
   {

@@ -143,7 +143,7 @@ const AttendanceManagement = () => {
               onActionAttend={actionAttend}
             />
             <PaginationComponent
-            className="border border-1"
+            className="border border-1 "
               totalItems={totalItems}
               itemsPerPage={itemsPerPage}
               currentPage={currentPage}
@@ -190,7 +190,7 @@ const SummaryCard = ({ title, count }) => {
   return (
     <Card
       className={`text-light fw-bold `}
-      style={{ backgroundColor: cardColor, flex: 1, margin: "0 8px" }}
+      style={{ backgroundColor: "#11171D", boxShadow:"0px 0px 1px 1px", flex: 1, margin: "0 8px" }}
     >
       <CardContent>
         <Typography variant="h6" style={{ fontSize: "20px" }}>
@@ -278,13 +278,13 @@ const SearchAndAddSection = ({
       value={employeeId}
       onChange={(e) => setEmployeeId(e.target.value)}
       style={{ marginRight: "16px" }}
-      className="form-control date-picker bg-light"
+      className="form-control date-picker bg-secondary border border-1 text-light"
     />
     <select
       value={status}
       onChange={(e) => setStatus(e.target.value)}
       style={{ marginRight: "16px" }}
-      className="form-control date-picker bg-light"
+      className="form-control date-picker bg-secondary border border-1 text-light"
     >
       <option value="">All</option>
       <option value="present">Present</option>
@@ -299,14 +299,14 @@ const SearchAndAddSection = ({
       selectsRange
       startDate={rangeDate.start}
       endDate={rangeDate.end}
-      className="form-control date-picker bg-light fw-bold"
+      className="form-control date-picker bg-secondary border border-1 text-light fw-bold"
       dateFormat="dd-M-yyyy"
       maxDate={new Date()}
       style={{ marginRight: "16px" }}
     />
     <Button
-      className="btnborder border-2 pt-2 ml-2"
-      style={{ background: "#080B0F", minWidth: "100px" }}
+      className="btn bg-secondary border border-2 pt-2 ml-2"
+      style={{  minWidth: "100px" }}
       onClick={onReportSearch}
     >
       <span className="text-light fw-bold" style={{ fontSize: "14px" }}>
@@ -314,10 +314,9 @@ const SearchAndAddSection = ({
       </span>
     </Button>
     <Button
-      className="btn w-100 border border-2 pt-2 ml-3"
+      className="btn w-100 border bg-secondary border-2 pt-2 ml-3"
       onClick={onAddAttendance}
       style={{
-        background: "#080B0F",
         color: "#fff",
         minWidth: "170px",
         fontSize: "14px",

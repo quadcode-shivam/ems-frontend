@@ -149,16 +149,33 @@ const fetchAttendance = async (
 };
 // Leave API Calls
 const createLeave = async (data) => {
-  const res = await api.post("admin/leaves/create", data);
-  return res.data;
+  try {
+    // Prepare the data object with the required keys
+    const leaveData = {
+      employee_id: data.employeeId,              // Employee ID
+      leave_type: data.leaveType,                // Type of leave (e.g., sick, vacation)
+      start_date: data.startDate,                // Leave start date
+      end_date: data.endDate,                    // Leave end date
+      description: data.description || null,     // Optional leave description
+      half_day_full_day: data.leaveDuration,     // Whether it’s a full day or half day leave
+    };
+
+    // Make the API request to submit the leave
+    const response = await api.post("apply-leave", leaveData);
+
+    // Return the response data
+    return response.data;
+  } catch (error) {
+    console.error("Error creating leave:", error);
+    throw error; // Re-throw the error for further handling if needed
+  }
 };
 
-const fetchLeaves = async (currentPage, itemsPerPage, status) => {
-  try {
-    const response = await api.post("admin/leaves/fetch", {
-      page: currentPage,
-      limit: itemsPerPage,
-      status: status,
+
+const fetchLeavesApi = async (user_id) => {
+  try { 
+    const response = await api.post("leaves/fetch", {
+      user_id: user_id,
     });
     return response.data;
   } catch (error) {
@@ -243,7 +260,7 @@ export {
   actionAttendApi,
   fetchAttendance,
   createLeave,
-  fetchLeaves,
+  fetchLeavesApi,
   fetchNotifications,
   createTask,
   fetchTasks,
