@@ -18,7 +18,11 @@ const Login = () => {
     try {
       const response = await loginUser(data); // Use the existing loginUser function
 
-      // Save token and user data in localStorage
+      // Clear old local storage data
+      localStorage.removeItem('token'); // Remove old token if it exists
+      localStorage.removeItem('user'); // Remove old user data if it exists
+
+      // Save new token and user data in localStorage
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
 
@@ -27,13 +31,10 @@ const Login = () => {
     } catch (error) {
       console.error('Error logging in:', error);
 
-      // Assuming the error response contains a message field
-      // Here you can set the error message from the API response to the email or password field
       if (error.response && error.response.data) {
         const { message } = error.response.data; // Adjust this based on your API response structure
         setError("email", { type: "manual", message }); // Set error message on the email field
       } else {
-        // Handle other errors or set a generic message
         alert('Login failed. Please check your credentials and try again.');
       }
     }
@@ -42,6 +43,7 @@ const Login = () => {
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit(onSubmit)} className="login-form">
+      {errors.email && <p className="error-message">{errors.email.message}</p>}
         <h2>Login</h2>
 
         {/* Email Field */}
@@ -58,7 +60,7 @@ const Login = () => {
               } 
             })}
           />
-          {errors.email && <p className="error-message">{errors.email.message}</p>}
+          
         </div>
 
         {/* Password Field */}
@@ -75,11 +77,16 @@ const Login = () => {
               }
             })}
           />
-          {errors.password && <p className="error-message">{errors.password.message}</p>}
         </div>
 
         {/* Submit Button */}
         <button type="submit" className="login-button">Login</button>
+
+        {/* Links for Registration and Forgot Password */}
+        <div className="form-links" style={{ display:"flex", justifyContent:"space-between" }}>
+            <span onClick={() => navigate('/forgot-password')} className="link"> Forgot Password?</span>
+            <span onClick={() => navigate('/register')} className="link">Register</span>
+        </div>
       </form>
     </div>
   );

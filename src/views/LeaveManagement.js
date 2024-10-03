@@ -21,28 +21,38 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
+import Loader from "./Loader/Loader";
 import Swal from "sweetalert2";
 import { createLeave } from "api";
 import { Card, CardFooter, CardHeader, Table } from "reactstrap";
 import { fetchLeavesApi } from "api";
+import { fetchHolidayApi } from "api";
 
 export default function EmployeeManagement() {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [leaves, setLeaves] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
+  const [holiday, setHolidays] = useState([]);
+  const [totalHolidays, setTotalHolidays] = useState(0);
+  const [totalLeaveTaken, setTotalLeaveTaken] = useState(0);
+  const [totalLate, setTotalLate] = useState(0);
+  const [totalHalf, setTotalHalf] = useState(0);
+  const [remainingLeaves, setRemainingLeaves] = useState(0);
+  const [remainingLate, setRemainingLate] = useState(0);
+  const [remainingHalf, setRemainingHalf] = useState(0);
+  const [totalleave, settotalleave] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [employees] = useState([
-    { id: 1, name: "John Doe" },
-    { id: 2, name: "Jane Smith" },
-    { id: 3, name: "Alice Johnson" },
-  ]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1); // Set to yesterday
+
   const [rangeDate, setRangeDate] = useState({
-    start: new Date(new Date().setDate(new Date().getDate() - 30)),
-    end: new Date(),
+    start: yesterday,
+    end: yesterday,
   });
+
   const [leaveType, setLeaveType] = useState("sick");
   const [halfDayFullDay, setHalfDayFullDay] = useState("full");
   const [description, setDescription] = useState("");
@@ -51,7 +61,7 @@ export default function EmployeeManagement() {
   const handleRangeChange = (e, key) => {
     setRangeDate((prevState) => ({
       ...prevState,
-      [key]: e.target.value,
+      [key]: new Date(e.target.value), // Ensure this is a Date object
     }));
   };
 
@@ -93,8 +103,8 @@ export default function EmployeeManagement() {
 
     const leaveData = {
       employeeId: user, // Use the logged-in user's ID
-      startDate: rangeDate.start,
-      endDate: rangeDate.end,
+      startDate: rangeDate.start.toISOString().split("T")[0], // Format date as string
+      endDate: rangeDate.end.toISOString().split("T")[0], // Format date as string
       leaveType: leaveType,
       leaveDuration: halfDayFullDay,
       description,
@@ -107,9 +117,10 @@ export default function EmployeeManagement() {
       Swal.fire("Success", "Leave applied successfully!", "success");
       console.log("Leave applied for employee:", response);
       fetchLeaves();
+      fetchHoliday();
       setRangeDate({
-        start: new Date(new Date().setDate(new Date().getDate() - 30)),
-        end: new Date(),
+        start: new Date(yesterday), // Reset to Date object
+        end: new Date(yesterday), // Reset to Date object
       });
       setLeaveType("sick");
       setHalfDayFullDay("full");
@@ -133,6 +144,26 @@ export default function EmployeeManagement() {
       const response = await fetchLeavesApi(storedUser.user_id);
       setLeaves(response.leaves);
       setTotalRecords(response.total_records);
+      setTotalHolidays(response.total_leave);
+      setTotalLeaveTaken(response.total_leave_taken);
+      setTotalLate(response.total_late);
+      setTotalHalf(response.total_half);
+      setRemainingLeaves(response.remaining_leaves);
+      setRemainingLate(response.remaining_late);
+      setRemainingHalf(response.remaining_half);
+      settotalleave(response.total_leave);
+    } catch (error) {
+      setError("Failed to load designations and positions. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchHoliday = async () => {
+    setLoading(true);
+    try {
+      const response = await fetchHolidayApi();
+      setHolidays(response.holidays);
+      setTotalHolidays(response.total_records);
     } catch (error) {
       setError("Failed to load designations and positions. Please try again.");
     } finally {
@@ -171,9 +202,9 @@ export default function EmployeeManagement() {
       color = "error";
     } else if (leaveType === "casual") {
       color = "primary";
-    } else if (leaveType === "paid") {
+    } else if (leaveType === "personal") {
       color = "success";
-    } else if (leaveType === "unpaid") {
+    } else if (leaveType === "other") {
       color = "warning";
     }
 
@@ -182,6 +213,7 @@ export default function EmployeeManagement() {
 
   useEffect(() => {
     fetchLeaves();
+    fetchHoliday();
     const storedUser = JSON.parse(localStorage.getItem("user"));
     setUser(storedUser.user_id);
   }, []);
@@ -195,8 +227,9 @@ export default function EmployeeManagement() {
         minHeight: "100vh",
       }}
     >
+        {loading == true && <Loader />}
       <Typography variant="h4" style={{ color: "#fff" }} gutterBottom>
-        Leave Management
+        Leave Dashboard
       </Typography>
 
       <Paper
@@ -227,7 +260,7 @@ export default function EmployeeManagement() {
         <Grid container alignItems="center" spacing={2}>
           <Grid
             item
-            xs={6}
+            xs={8}
             style={{
               padding: "20px",
               marginTop: "20px",
@@ -315,7 +348,9 @@ export default function EmployeeManagement() {
                     </TableBody>
                   </Table>
                 </TableContainer>
-                {totalRecords === 0 && <p>No leaves found.</p>}
+                {totalRecords === 0 && (
+                  <p className="text-light text-center">No leaves found.</p>
+                )}
               </CardContent>
               <CardFooter className="bg-primary border border-top-1 border-dark text-light">
                 <div>Total :</div>
@@ -325,13 +360,162 @@ export default function EmployeeManagement() {
           </Grid>
           <Grid
             item
-            xs={6}
+            xs={4}
             style={{
               padding: "20px",
               marginTop: "20px",
               background: "#11171D",
             }}
-          ></Grid>
+          >
+            <Card className="bg-primary border border-1 ">
+              <CardHeader className="bg-primary border border-bottom-1 border-dark">
+                <Typography
+                  style={{
+                    fontSize: "20px",
+                    color: "#fff",
+                    paddingBottom: "10px",
+                  }}
+                >
+                  {"LEAVE POLICY AND LEAVE COUNT"}
+                </Typography>
+              </CardHeader>
+              <CardContent className="p-0 m-0">
+                <Table className="rounded ">
+                  <TableHead className="bg-secondary text-light rounded fw-bold">
+                    <TableRow>
+                      <TableCell
+                        className="text-light"
+                        style={{ fontSize: "14px" }}
+                      >
+                        POLICY
+                      </TableCell>
+                      <TableCell
+                        className="text-light"
+                        style={{ fontSize: "14px" }}
+                      >
+                        COUNT
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow className={totalleave < 0 ? "bg-danger" : ""}>
+                      <TableCell className="text-light">TOTAL LEAVE</TableCell>
+                      <TableCell className="text-light">{totalleave}</TableCell>
+                    </TableRow>
+                    <TableRow className={totalLate < 0 ? "bg-danger" : ""}>
+                      <TableCell className="text-light">TOTAL LATE</TableCell>
+                      <TableCell className="text-light">{totalLate}</TableCell>
+                    </TableRow>
+                    <TableRow className={totalHalf < 0 ? "bg-danger" : ""}>
+                      <TableCell className="text-light">
+                        TOTAL HALFDAY
+                      </TableCell>
+                      <TableCell className="text-light">{totalHalf}</TableCell>
+                    </TableRow>
+                    <TableRow className={totalLeaveTaken < 0 ? "bg-danger" : ""}>
+                      <TableCell className="text-light">TAKEN LEAVE</TableCell>
+                      <TableCell className="text-light">
+                        {totalLeaveTaken}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow className={remainingLeaves < 0 ? "bg-danger" : ""}>
+                      <TableCell className="text-light">LEFT LEAVE</TableCell>
+                      <TableCell className="text-light">
+                        {remainingLeaves}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow className={remainingLate < 0 ? "bg-danger" : ""}>
+                      <TableCell className="text-light">LEFT LATE</TableCell>
+                      <TableCell className="text-light">
+                        {remainingLate}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow className={remainingHalf < 0 ? "bg-danger" : ""}>
+                      <TableCell className="text-light">LEFT HALFDAY</TableCell>
+                      <TableCell className="text-light">
+                        {remainingHalf}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid
+            item
+            xs={8}
+            style={{
+              padding: "20px",
+              marginTop: "20px",
+              background: "#11171D",
+            }}
+          >
+            <Card className="bg-primary border border-1">
+              <CardHeader className="bg-primary border border-bottom-1 border-dark">
+                <Typography
+                  style={{
+                    fontSize: "20px",
+                    color: "#fff",
+                    paddingBottom: "10px",
+                  }}
+                >
+                  {"UPCOMING HOLIDAY"}
+                </Typography>
+              </CardHeader>
+              <CardContent className="p-0 m-0">
+                <TableContainer>
+                  <Table className="rounded m-0 p-0">
+                    <TableHead className="bg-secondary text-light rounded fw-bold pl-2">
+                      <TableRow>
+                       
+                        <TableCell
+                          className="text-light"
+                          style={{ fontSize: "14px" }}
+                        >
+                          HOLIDAY
+                        </TableCell>
+                        <TableCell
+                          className="text-light"
+                          style={{ fontSize: "14px" }}
+                        >
+                          DATE
+                        </TableCell>
+                        <TableCell
+                          className="text-light"
+                          style={{ fontSize: "14px" }}
+                        >
+                          DESCRIPTION
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {holiday.map((holiday) => (
+                        <TableRow key={holiday.id}>
+                         
+                          <TableCell className="text-light">
+                            {holiday.holiday_name}
+                          </TableCell>
+                          <TableCell className="text-light">
+                            {holiday.holiday_date}
+                          </TableCell>
+                          <TableCell className="text-light">
+                            {holiday.holiday_desc}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                {totalHolidays === 0 && (
+                  <p className="text-light text-center">No Holiday found.</p>
+                )}
+              </CardContent>
+              <CardFooter className="bg-primary border border-top-1 border-dark text-light">
+                <div>Total :</div>
+                <div style={{ marginRight: "40px" }}>{totalHolidays}</div>
+              </CardFooter>
+            </Card>
+          </Grid>
         </Grid>
       </Paper>
 
@@ -366,8 +550,8 @@ export default function EmployeeManagement() {
           >
             <MenuItem value="sick">Sick Leave</MenuItem>
             <MenuItem value="casual">Casual Leave</MenuItem>
-            <MenuItem value="paid">Paid Leave</MenuItem>
-            <MenuItem value="unpaid">Unpaid Leave</MenuItem>
+            <MenuItem value="personal">Personal Leave</MenuItem>
+            <MenuItem value="other">Other Leave</MenuItem>
           </TextField>
           {errors.leave_type && (
             <p style={{ color: "red" }}>{errors.leave_type}</p>
@@ -377,7 +561,7 @@ export default function EmployeeManagement() {
             fullWidth
             type="date"
             label="Start Date"
-            value={rangeDate.start.toISOString().split("T")[0]}
+            value={""}
             onChange={(e) => handleRangeChange(e, "start")}
             margin="normal"
             error={Boolean(errors.start_date)}
@@ -390,7 +574,7 @@ export default function EmployeeManagement() {
             fullWidth
             type="date"
             label="End Date"
-            value={rangeDate.end.toISOString().split("T")[0]}
+            value={""}
             onChange={(e) => handleRangeChange(e, "end")}
             margin="normal"
             error={Boolean(errors.end_date)}

@@ -30,7 +30,6 @@ const loginUser = async (data) => {
   }
 };
 
-
 const checkIn = async (employeeId) => {
   try {
     const res = await api.post("/check-in", { user_id: employeeId });
@@ -56,7 +55,7 @@ const checkOut = async (employeeId) => {
 const fetchCheckInRecords = async (params) => {
   try {
     const response = await api.post("checkrecord", {
-      user_id:params
+      user_id: params,
     }); // Adjust endpoint as needed
     return response.data;
   } catch (error) {
@@ -64,7 +63,6 @@ const fetchCheckInRecords = async (params) => {
     throw error;
   }
 };
-
 
 const fetchEmployees = async (currentPage, itemsPerPage, rangeDate) => {
   try {
@@ -108,7 +106,7 @@ const actionAttendApi = async (id, action) => {
 const fetchDesignationsAndPositionsApi = async () => {
   try {
     const response = await api.get("designations-and-positions");
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error("Error fetching designations and positions:", error);
     throw error;
@@ -152,12 +150,12 @@ const createLeave = async (data) => {
   try {
     // Prepare the data object with the required keys
     const leaveData = {
-      employee_id: data.employeeId,              // Employee ID
-      leave_type: data.leaveType,                // Type of leave (e.g., sick, vacation)
-      start_date: data.startDate,                // Leave start date
-      end_date: data.endDate,                    // Leave end date
-      description: data.description || null,     // Optional leave description
-      half_day_full_day: data.leaveDuration,     // Whether it’s a full day or half day leave
+      employee_id: data.employeeId, // Employee ID
+      leave_type: data.leaveType, // Type of leave (e.g., sick, vacation)
+      start_date: data.startDate, // Leave start date
+      end_date: data.endDate, // Leave end date
+      description: data.description || null, // Optional leave description
+      half_day_full_day: data.leaveDuration, // Whether it’s a full day or half day leave
     };
 
     // Make the API request to submit the leave
@@ -171,12 +169,105 @@ const createLeave = async (data) => {
   }
 };
 
-
 const fetchLeavesApi = async (user_id) => {
-  try { 
+  try {
     const response = await api.post("leaves/fetch", {
       user_id: user_id,
     });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching leaves:", error);
+    throw error;
+  }
+};
+
+const fetchLeavesApiAdmin = async () => {
+  try {
+    const response = await api.post("leaves/fetchAdmin"); // Adjust if API expects a body or params
+    console.log("Leaves data fetched successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching leaves:", error.response || error);
+    throw new Error("Failed to fetch leaves data. Please try again later.");
+  }
+};
+// Fetch Leave Policies API
+const fetchLeavePoliciesApi = async () => {
+  try {
+    const response = await api.get("/leave-policies"); // Adjust the endpoint
+    console.log("Leave policies fetched successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching leave policies:", error.response || error);
+    throw new Error(
+      "Failed to fetch leave policies data. Please try again later."
+    );
+  }
+};
+
+// Update Policy API
+const updatePolicyApi = async (request) => {
+  try {
+    const response = await api.put(`/leave-policies/${request.id}`, request); // Adjust the endpoint
+    console.log("Leave policy updated successfully:", response.data);
+    return response.data; // Return the updated data if needed
+  } catch (error) {
+    console.error("Error updating leave policy:", error.response || error);
+    throw new Error("Failed to update leave policy. Please try again later.");
+  }
+};
+
+// Fetch Company Policies API
+
+const fetchCompanyPoliciesApi = async () => {
+  try {
+    const response = await api.get("/company-policies"); // Adjust the endpoint
+    console.log("Company policies fetched successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching company policies:", error.response || error);
+    throw new Error(
+      "Failed to fetch company policies data. Please try again later."
+    );
+  }
+};
+
+const updateCompanyPolicyApi = async (policy) => {
+  try {
+    const response = await api.put(`/company-policies/${policy.id}`, policy); // Adjust the endpoint
+    console.log("Company policy updated successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating company policy:", error.response || error);
+    throw new Error("Failed to update company policy. Please try again later.");
+  }
+};
+
+// Create Company Policy API
+const createCompanyPolicyApi = async (request) => {
+  try {
+    const response = await api.post("/company-policies", request); // Adjust the endpoint
+    console.log("Company policy created successfully:", response.data);
+    return response.data; // Return the created data if needed
+  } catch (error) {
+    console.error("Error creating company policy:", error.response || error);
+    throw new Error("Failed to create company policy. Please try again later.");
+  }
+};
+
+const updateLeaveStatusApi = async (request) => {
+  try {
+    const response = await api.post("leaves/updateStatus", request);
+    return response.data; // Return the updated data if needed
+  } catch (error) {
+    console.error("Error updating leave status:", error.response || error);
+    throw new Error("Failed to update leave status. Please try again later.");
+  }
+};
+
+const fetchHolidayApi = async (user_id) => {
+  try {
+    const response = await api.post("all-holiday");
     return response.data;
   } catch (error) {
     console.error("Error fetching leaves:", error);
@@ -261,9 +352,17 @@ export {
   fetchAttendance,
   createLeave,
   fetchLeavesApi,
+  fetchHolidayApi,
   fetchNotifications,
   createTask,
   fetchTasks,
   fetchTaskComments,
   fetchSettings,
+  updateLeaveStatusApi,
+  fetchLeavesApiAdmin,
+  fetchLeavePoliciesApi,
+  updatePolicyApi,
+  createCompanyPolicyApi,
+  fetchCompanyPoliciesApi,
+  updateCompanyPolicyApi,
 };
