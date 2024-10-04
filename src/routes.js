@@ -2,7 +2,7 @@ import Dashboards from "views/Dashboards.js";
 import EmployeeManagement from "views/EmployeeManagement"; 
 import AttendanceManagement from "views/AttendanceManagement"; 
 import LeaveManagement from "views/LeaveManagement"; 
-import TaskManagement from "views/TaskManagement";
+import TaskManagement from "views/TaskMangement/TaskManagement";
 import UserDashboard from "views/UserDashboard";
 import AttendanceManage from "views/admin/AttendanceManage";
 import Policy from "views/admin/Policy";
