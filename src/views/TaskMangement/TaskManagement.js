@@ -3,8 +3,10 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import axios from "axios";
 import DemoNavbar from "components/Navbars/DemoNavbar";
 import Loader from "views/Loader/Loader";
-import "./TaskManagement.css"; // Import external CSS
-import { Chip } from "@mui/material";
+import "./TaskManagement.css";
+
+import { AccountTreeOutlined, CategoryOutlined, PortraitOutlined, ViewKanbanOutlined, ViewTimelineOutlined } from "@mui/icons-material";
+import TaskDetailDialog from "./TaskDetailDialog";
 
 const api = axios.create({
   baseURL: "http://127.0.0.1:8000/api/",
@@ -28,9 +30,9 @@ const initialData = {
 const TaskManagement = () => {
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(false);
-  const [employeeId, setEmployeeId] = useState("EMPSHI122"); // Set this to the actual employee ID
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
 
-  // Fetch tasks from the API on component mount
   useEffect(() => {
     const fetchTasks = async () => {
       setLoading(true);
@@ -38,25 +40,25 @@ const TaskManagement = () => {
         const response = await api.get('tasks/fetch');
         const tasksData = response.data;
 
-        // Initialize tasks and reset column taskIds
         const tasks = {};
         const updatedColumns = { ...initialData.columns };
 
-        // Populate tasks and columns
         tasksData.forEach(task => {
-          // Store the task in the tasks object
-          tasks[task.id] = { id: task.id, title: task.title, description: task.description }; // Assuming the API returns an id, title, and description
+          tasks[task.id] = { 
+            id: task.id, 
+            title: task.title, 
+            description: task.description,
+            employee_id: task.employee_id,
+            priority: task.priority,
+            create_at: task.created_at,
+          };
 
-          // Get the task's status and convert it to a valid column ID
           const taskStatus = task.status.replace(/ /g, "-").toLowerCase();
-
-          // If the taskStatus exists in the columns, add the task ID
           if (updatedColumns[taskStatus]) {
             updatedColumns[taskStatus].taskIds.push(task.id);
           }
         });
 
-        // Update state with fetched tasks and columns
         setData({
           tasks: tasks,
           columns: updatedColumns,
@@ -72,17 +74,14 @@ const TaskManagement = () => {
     fetchTasks();
   }, []);
 
-  // Handle task drag and drop
   const onDragEnd = async (result) => {
     const { destination, source, draggableId } = result;
-
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
     const start = data.columns[source.droppableId];
     const finish = data.columns[destination.droppableId];
 
-    // If moving within the same column
     if (start === finish) {
       const newTaskIds = Array.from(start.taskIds);
       newTaskIds.splice(source.index, 1);
@@ -94,7 +93,6 @@ const TaskManagement = () => {
       return;
     }
 
-    // Moving to a different column
     const startTaskIds = Array.from(start.taskIds);
     startTaskIds.splice(source.index, 1);
     const newStart = { ...start, taskIds: startTaskIds };
@@ -109,40 +107,40 @@ const TaskManagement = () => {
     };
     setData(newState);
 
-    // Prepare the updated task
     const updatedTask = {
-      id: draggableId, // Send the task ID
-      employee_id: employeeId, // Include the employee ID
-      status: destination.droppableId.replace(/-/g, " "), // Convert droppableId to status
+      id: draggableId,
+      employee_id: data.tasks[draggableId].employee_id,
+      status: destination.droppableId.replace(/-/g, " "),
     };
 
-    // Update task status in the backend
     try {
       const response = await api.post('tasks/update', updatedTask);
-      console.log("Update response:", response.data); // Log the response
+      console.log("Update response:", response.data);
     } catch (error) {
       console.error("Error updating task status:", error.response ? error.response.data : error.message);
     }
   };
 
-
-  const getPriorityBadge = (priority) => {
+  const getPriorityIcon = (priority) => {
     switch (priority) {
       case 1:
-        return { label: "Low", color: "green" };
+        return <ViewKanbanOutlined style={{ color: "green" }} />;
       case 2:
-        return { label: "Medium", color: "orange" };
+        return <ViewTimelineOutlined style={{ color: "orange" }} />;
       case 3:
-        return { label: "High", color: "red" };
+        return <AccountTreeOutlined style={{ color: "red" }} />;
       default:
-        return { label: "Low", color: "green" };
+        return <CategoryOutlined style={{ color: "gray" }} />;
     }
   };
 
-  
+  const handleTaskClick = (task) => {
+    setSelectedTask(task);
+    setDialogOpen(true);
+  };
 
   return (
-     <>
+    <>
       <DemoNavbar size="sm" />
       {loading && <Loader />}
       <div className="task-management-container">
@@ -157,37 +155,39 @@ const TaskManagement = () => {
                   {(provided) => (
                     <div className="column" {...provided.droppableProps} ref={provided.innerRef}>
                       <h3 className="column-title">{column.title}</h3>
-                      {tasks.map((task, index) => {
-                        const { label, color } = getPriorityBadge(task.priority);
-
-                        return (
-                          <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
-                            {(provided) => (
-                              <div
-                                className="task-card"
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                style={provided.draggableProps.style}
-                              >
-                                <div className="task-header">
-                                  <p className="employee-id">{task.employee_id}</p>
-                                  <h4 className="task-title">{task.title}</h4>
-                                </div>
-                                <p className="task-description">
-                                  {task.description.length > 50
-                                    ? `${task.description.substring(0, 50)}...`
-                                    : task.description}
+                      {tasks.map((task, index) => (
+                        <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
+                          {(provided) => (
+                            <div
+                              className="task-card"
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={provided.draggableProps.style}
+                              onClick={() => handleTaskClick(task)} // Handle click to open dialog
+                            >
+                              <div className="task-header">
+                                <p className="employee-id"> 
+                                  <span className="mr-1">{getPriorityIcon(task.priority)} </span>
+                                  {task.employee_id}
                                 </p>
-                                <div className="task-footer">
-                                  <p className="created-at">{new Date(task.create_at).toLocaleDateString()}</p>
-                                  <Chip label={label} style={{ backgroundColor: color, color: 'white' }} />
-                                </div>
+                                <p className="task-title">{task.title}</p>
                               </div>
-                            )}
-                          </Draggable>
-                        );
-                      })}
+                              <p className="task-description">
+                                {task.description.length > 50
+                                  ? `${task.description.substring(0, 50)}...`
+                                  : task.description}
+                              </p>
+                              <div className="task-footer">
+                                <p className="created-at m-0 p-0">{new Date(task.create_at).toLocaleDateString()}</p>
+                                <p className="p-0 m-0"> 
+                                  <PortraitOutlined style={{background:"#3B82f0", borderRadius:"5px", color:"#2c3e50"}} />
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
                       {provided.placeholder}
                     </div>
                   )}
@@ -197,6 +197,12 @@ const TaskManagement = () => {
           </div>
         </DragDropContext>
       </div>
+      <TaskDetailDialog
+      varient="warning"
+        isOpen={isDialogOpen} 
+        task={selectedTask} 
+        onClose={() => setDialogOpen(false)} // Close dialog
+      />
     </>
   );
 };
