@@ -26,7 +26,7 @@
 
 /* Custom Scrollbar Styling for Webkit Browsers (Chrome, Safari, Edge) */
 .task-management-container::-webkit-scrollbar {
-    width: 12px; /* Width of the scrollbar */
+    width: 2px; /* Width of the scrollbar */
 }
 
 .task-management-container::-webkit-scrollbar-track {
@@ -94,7 +94,7 @@
 /* Task card styling */
 .task-card {
     min-width: 160px;
-    min-height: 200px; /* Adjust height if needed */
+    min-height: 180px; /* Adjust height if needed */
     padding: 12px;
     padding-top: 10px;
     margin-bottom: 8px;
@@ -310,3 +310,15 @@ li {
   
 }
 
+.comment-container {
+    margin-top: 20px; /* Space above comments section */
+  }
+  
+  .comment-item {
+    margin-bottom: 10px; /* Space between comments */
+  }
+  
+  .no-data-text {
+    color: gray; /* Color for empty state text */
+    text-align: center; /* Center the text */
+  }

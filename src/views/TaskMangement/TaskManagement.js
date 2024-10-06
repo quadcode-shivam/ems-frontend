@@ -203,7 +203,7 @@ const TaskManagement = () => {
         task={selectedTask} 
         onClose={() => setDialogOpen(false)} // Close dialog
       />
-    </>
+      </>
   );
 };
 
