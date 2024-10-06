@@ -1,12 +1,53 @@
+:root {
+    --primary-bg-color: #0f1214; /* Background color for main sections */
+    --secondary-bg-color: #272b30; /* Column background color */
+    --hover-bg-color: #3a3f43; /* Hover effect for columns */
+    --task-card-bg: #2c3e50; /* Task card background color */
+    --hover-task-card-bg: #34495e; /* Hover effect for task cards */
+    --history-entry-bg: #3b3f45; /* Background for history entries */
+    --text-color: #ffffff; /* Default text color */
+    --subtext-color: #82878a; /* Secondary text color */
+    --divider-color: rgba(255, 255, 255, 0.1); /* Divider color */
+    --button-bg-color: #2c3e50; /* Button background color */
+    --button-hover-color: #82878a; /* Button hover color */
+    --transition-time: 0.3s; /* Transition timing */
+}
+
 /* Container for the task management layout */
 .task-management-container {
     margin-top: 60px;
     min-height: 100vh;
-    background: #0f1214;
+    background: var(--primary-bg-color);
     display: flex;
     flex-direction: column;
     padding: 10px;
     overflow-x: auto; /* Allow horizontal scrolling on small screens */
+}
+
+/* Custom Scrollbar Styling for Webkit Browsers (Chrome, Safari, Edge) */
+.task-management-container::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+}
+
+.task-management-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1); /* Track color */
+    border-radius: 10px; /* Rounded corners */
+}
+
+.task-management-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.5); /* Thumb color */
+    border-radius: 10px; /* Rounded corners */
+    transition: background 0.3s; /* Transition effect */
+}
+
+.task-management-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.8); /* Thumb color on hover */
+}
+
+/* Custom Scrollbar Styling for Firefox */
+.task-management-container {
+    scrollbar-width: thin; /* "auto" or "thin" */
+    scrollbar-color: rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.1); /* Thumb color and track color */
 }
 
 /* Flex container for columns */
@@ -21,7 +62,7 @@
 
 /* Individual column styling */
 .column {
-    background: #272b30;
+    background: var(--secondary-bg-color);
     padding: 5px;
     border-radius: 8px;
     width: 200px; /* Increased width for better visibility */
@@ -30,23 +71,23 @@
     flex-direction: column;
     align-items: center;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease; /* Transition for hover effect */
+    transition: background-color var(--transition-time); /* Transition for hover effect */
 }
 
 /* Hover effect for columns */
 .column:hover {
-    background: #3a3f43; /* Darker shade on hover */
+    background: var(--hover-bg-color); /* Darker shade on hover */
 }
 
 /* Title for each column */
 .column-title {
-    color: #ffffff;
+    color: var(--text-color);
     margin-bottom: 16px;
     text-align: center;
     font-weight: bold; /* Bold font for titles */
     min-width: 200px;
-    font-size:14px;
-    border-bottom: 1px solid #11171D;
+    font-size: 14px;
+    border-bottom: 1px solid var(--divider-color);
     padding-bottom: 10px;
 }
 
@@ -57,13 +98,13 @@
     padding: 12px;
     padding-top: 10px;
     margin-bottom: 8px;
-    background-color: #2c3e50;
-    color: #ffffff;
+    background-color: var(--task-card-bg);
+    color: var(--text-color);
     border-radius: 4px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     user-select: none;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: background-color var(--transition-time), transform var(--transition-time);
     display: flex; 
     flex-direction: column; 
     justify-content: space-between; 
@@ -71,37 +112,33 @@
 
 /* Add hover effect for task cards */
 .task-card:hover {
-    background-color: #34495e;
+    background-color: var(--hover-task-card-bg);
     transform: translateY(-2px); 
 }
 
-.employee-id{
-    border-bottom:1px solid #82878a;
+.employee-id {
+    border-bottom: 1px solid var(--subtext-color);
     padding-bottom: 4px;
     font-size: 12px;
     margin-bottom: 3px;
 }
 
-.task-title{
+.task-title {
     font-size: 14px;
 }
 
-.task-description{
+.task-description {
     align-items: justify;
     font-size: 12px;
 }
-
-
 
 .task-footer {
     margin-top: auto;    /* Push the footer (created_at) to the bottom */
     margin-bottom: 0px;
     bottom: 0px;
-    display:flex;
+    display: flex;
     justify-content: space-between;
 }
-
-
 
 /* Handle responsive behavior on smaller screens */
 @media (max-width: 768px) {
@@ -115,13 +152,6 @@
     }
 }
 
-
-
-
-
-/* Task-Dialog */
-
-/* TaskManagement.css */
 /* Modal Styles */
 .modal {
     display: flex;
@@ -135,13 +165,13 @@
 }
 
 .modal-title {
-    color: white; /* Title color */
+    color: var(--text-color); /* Title color */
 }
 
 .modal-body {
     margin: 20px 0;
-    color: #82878a; /* Body text color */
-    background-color: #0f1214;
+    color: var(--subtext-color); /* Body text color */
+    background-color: var(--primary-bg-color);
 }
 
 .modal-footer {
@@ -150,8 +180,8 @@
 }
 
 .footer-button {
-    background-color: #2c3e50; /* Button background color */
-    color: white; /* Button text color */
+    background-color: var(--button-bg-color); /* Button background color */
+    color: var(--text-color); /* Button text color */
     border: none;
     border-radius: 5px;
     padding: 10px 15px;
@@ -159,10 +189,124 @@
 }
 
 .footer-button:hover {
-    background-color: #82878a; /* Button hover color */
+    background-color: var(--button-hover-color); /* Button hover color */
 }
 
-.MuiDialog-paperWidthSm{
-    background-color: #0f1214;
-    border: 1px solid #82878a;
+.MuiDialog-paperWidthSm {
+    background-color: var(--primary-bg-color);
+    border: 1px solid var(--subtext-color);
 }
+
+/* Dialog content general styling */
+.dialog-container {
+    color: var(--text-color);
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+  
+.dialog-container h5 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: var(--subtext-color);
+}
+  
+/* Tabs styling */
+.MuiTabs-root {
+    background-color: #333;
+    border-bottom: 1px solid #555;
+}
+  
+.MuiTab-root {
+    color: #aaa;
+}
+  
+.Mui-selected {
+    color: var(--text-color) !important;
+}
+  
+.MuiTabs-indicator {
+    background-color: #ff4081;
+}
+  
+/* Badge styling */
+.badge-container {
+    display: flex;
+    align-items: center;
+}
+  
+.MuiBadge-badge {
+    background-color: #ff4081;
+    color: var(--text-color);
+    font-size: 0.75rem;
+}
+  
+/* Comments section */
+.comment-container {
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #1e1e1e;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+  
+.comment-container p {
+    padding: 8px;
+    background-color: #2a2a2a;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    word-wrap: break-word;
+}
+  
+/* Comment input box */
+.comment-input {
+    margin-top: 10px;
+}
+  
+.comment-input .MuiOutlinedInput-root {
+    background-color: black;
+    border-radius: 5px;
+}
+.history-container {
+    padding: 20px;
+    background-color: #272b30; /* Dark background for the container */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.history-entry {
+    padding: 15px; /* Slightly increased padding */
+    margin: 10px 0;
+    background-color: #2c3e50; /* Darker background for entries */
+    color: #ffffff; /* White text for better contrast */
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.history-entry:hover {
+    transform: scale(1.03); /* Slightly larger on hover */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+.avatar {
+    background-color: #007acc; /* Bright color for avatar */
+    color: #ffffff; /* White text in avatar */
+    font-weight: bold; /* Bold text for initials */
+}
+
+.no-data-text {
+    color: #ffffff; /* White text for no data message */
+    text-align: center;
+    font-weight: bold;
+}
+
+.divider {
+    background-color: #444; /* Darker divider color */
+}
+
+li {
+    list-style-type: none; /* Remove bullet points */
+  
+}
+

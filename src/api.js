@@ -90,6 +90,29 @@ const removeEmployees = async (id) => {
     throw error;
   }
 };
+
+const taskDetailUpdate = async (data) => {
+  try {
+    const response = await api.post("tasks/update",data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching employees:", error);
+    throw error;
+  }
+};
+const taskHistryFetch = async (data) => {
+  try {
+    const response = await api.post("task-history",{task_id : data});
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching employees:", error);
+    throw error;
+  }
+};
+
+
+
+
 const actionAttendApi = async (id, action) => {
   try {
     const response = await api.post("admin/attendance/action", {
@@ -364,5 +387,7 @@ export {
   updatePolicyApi,
   createCompanyPolicyApi,
   fetchCompanyPoliciesApi,
+  taskDetailUpdate,
+  taskHistryFetch,
   updateCompanyPolicyApi,
 };
