@@ -8,12 +8,10 @@ import "./TaskManagement.css";
 import { AccountTreeOutlined, CategoryOutlined, PortraitOutlined, ViewKanbanOutlined, ViewTimelineOutlined } from "@mui/icons-material";
 import TaskDetailDialog from "./TaskDetailDialog";
 
-// Axios instance for API calls
 const api = axios.create({
   baseURL: "http://127.0.0.1:8000/api/",
 });
 
-// Initial state setup for tasks and columns
 const initialData = {
   tasks: {},
   columns: {
@@ -35,7 +33,6 @@ const TaskManagement = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
 
-  // Fetching tasks from the backend
   useEffect(() => {
     const fetchTasks = async () => {
       setLoading(true);
@@ -47,9 +44,9 @@ const TaskManagement = () => {
         const updatedColumns = { ...initialData.columns };
 
         tasksData.forEach(task => {
-          tasks[task.id] = {
-            id: task.id,
-            title: task.title,
+          tasks[task.id] = { 
+            id: task.id, 
+            title: task.title, 
             description: task.description,
             employee_id: task.employee_id,
             priority: task.priority,
@@ -77,7 +74,6 @@ const TaskManagement = () => {
     fetchTasks();
   }, []);
 
-  // Handle drag and drop task movement
   const onDragEnd = async (result) => {
     const { destination, source, draggableId } = result;
     if (!destination) return;
@@ -86,7 +82,6 @@ const TaskManagement = () => {
     const start = data.columns[source.droppableId];
     const finish = data.columns[destination.droppableId];
 
-    // Reordering tasks within the same column
     if (start === finish) {
       const newTaskIds = Array.from(start.taskIds);
       newTaskIds.splice(source.index, 1);
@@ -98,7 +93,6 @@ const TaskManagement = () => {
       return;
     }
 
-    // Moving tasks between columns
     const startTaskIds = Array.from(start.taskIds);
     startTaskIds.splice(source.index, 1);
     const newStart = { ...start, taskIds: startTaskIds };
@@ -113,7 +107,6 @@ const TaskManagement = () => {
     };
     setData(newState);
 
-    // API call to update the task status in the backend
     const updatedTask = {
       id: draggableId,
       employee_id: data.tasks[draggableId].employee_id,
@@ -128,7 +121,6 @@ const TaskManagement = () => {
     }
   };
 
-  // Get task priority icon based on the priority level
   const getPriorityIcon = (priority) => {
     switch (priority) {
       case 1:
@@ -142,7 +134,6 @@ const TaskManagement = () => {
     }
   };
 
-  // Handle task card click to show task details in a dialog
   const handleTaskClick = (task) => {
     setSelectedTask(task);
     setDialogOpen(true);
@@ -176,7 +167,7 @@ const TaskManagement = () => {
                               onClick={() => handleTaskClick(task)} // Handle click to open dialog
                             >
                               <div className="task-header">
-                                <p className="employee-id">
+                                <p className="employee-id"> 
                                   <span className="mr-1">{getPriorityIcon(task.priority)} </span>
                                   {task.employee_id}
                                 </p>
@@ -189,8 +180,8 @@ const TaskManagement = () => {
                               </p>
                               <div className="task-footer">
                                 <p className="created-at m-0 p-0">{new Date(task.create_at).toLocaleDateString()}</p>
-                                <p className="p-0 m-0">
-                                  <PortraitOutlined style={{ background: "#3B82f0", borderRadius: "5px", color: "#2c3e50" }} />
+                                <p className="p-0 m-0"> 
+                                  <PortraitOutlined style={{background:"#3B82f0", borderRadius:"5px", color:"#2c3e50"}} />
                                 </p>
                               </div>
                             </div>
@@ -207,11 +198,12 @@ const TaskManagement = () => {
         </DragDropContext>
       </div>
       <TaskDetailDialog
-        isOpen={isDialogOpen}
-        task={selectedTask}
+      varient="warning"
+        isOpen={isDialogOpen} 
+        task={selectedTask} 
         onClose={() => setDialogOpen(false)} // Close dialog
       />
-      </>
+    </>
   );
 };
 
