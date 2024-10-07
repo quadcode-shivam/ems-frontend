@@ -1,9 +1,9 @@
 {
-  "name": "now-ui-dashboard-react",
+  "name": "admin/dashboards",
   "version": "1.5.2",
   "main": "dist/index.js",
   "private": true,
-  "homepage": "https://demos.creative-tim.com/now-ui-dashboard-react/#/",
+  "homepage": "https://demos.creative-tim.com/admin/dashboards/#/",
   "dependencies": {
     "@date-io/date-fns": "^3.0.0",
     "@emotion/react": "^11.13.3",

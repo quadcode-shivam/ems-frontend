@@ -27,10 +27,10 @@ root.render(
       <Route path="/forgot-password" element={<ForgotPassword />} /> {/* New route for Forgot Password */}
 
       {/* Example dashboard route within Admin Layout */}
-      <Route path="/admin/dashboard" element={<Dashboards />} />
+      <Route path="/admin/dashboards" element={<Dashboards />} />
 
       {/* Redirect all unknown paths to admin dashboard */}
-      <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/admin/dashboards" replace />} />
     </Routes>
   </BrowserRouter>
 );
