@@ -90,6 +90,71 @@ const removeEmployees = async (id) => {
     throw error;
   }
 };
+
+const taskDetailUpdate = async (data) => {
+  try {
+    const response = await api.post("tasks/update", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching employees:", error);
+    throw error;
+  }
+};
+const taskHistryFetch = async (data) => {
+  try {
+    const response = await api.post("task-history", { task_id: data });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching employees:", error);
+    throw error;
+  }
+};
+
+const fetchTaskComments = async (taskId) => {
+  try {
+    const response = await api.post(`/comments-fetch`, { task_id: taskId });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    throw error;
+  }
+};
+
+// Create a new comment
+
+const createTaskComment = async (data) => {
+  try {
+    const response = await api.post("/comments-create", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating comment:", error);
+    throw error;
+  }
+};
+
+// Update an existing comment (based on your POST route)
+
+const updateTaskComment = async (data) => {
+  try {
+    const response = await api.post("/comments-update", data); // POST for update
+    return response.data;
+  } catch (error) {
+    console.error("Error updating comment:", error);
+    throw error;
+  }
+};
+
+// Delete a comment (based on your POST route)
+const deleteTaskComment = async (taskId) => {
+  try {
+    const response = await api.post("/comments-delete", { task_id: taskId }); // POST for delete
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    throw error;
+  }
+};
+
 const actionAttendApi = async (id, action) => {
   try {
     const response = await api.post("admin/attendance/action", {
@@ -309,20 +374,6 @@ const fetchTasks = async (currentPage, itemsPerPage, status) => {
   }
 };
 
-// Task Comment API Calls
-const fetchTaskComments = async (currentPage, itemsPerPage) => {
-  try {
-    const response = await api.post("admin/task-comments/fetch", {
-      page: currentPage,
-      limit: itemsPerPage,
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching task comments:", error);
-    throw error;
-  }
-};
-
 // Setting API Calls
 const fetchSettings = async (currentPage, itemsPerPage) => {
   try {
@@ -357,6 +408,9 @@ export {
   createTask,
   fetchTasks,
   fetchTaskComments,
+  deleteTaskComment,
+  updateTaskComment,
+  createTaskComment,
   fetchSettings,
   updateLeaveStatusApi,
   fetchLeavesApiAdmin,
@@ -364,5 +418,7 @@ export {
   updatePolicyApi,
   createCompanyPolicyApi,
   fetchCompanyPoliciesApi,
+  taskDetailUpdate,
+  taskHistryFetch,
   updateCompanyPolicyApi,
 };
