@@ -291,15 +291,8 @@ const SearchAndAddSection = ({
       maxDate={new Date()}
       style={{ marginRight: "16px" }}
     />
-    <Button
-      color="primary"
-      variant="contained"
-      onClick={onAddAttendance}
-      style={{ marginRight: "16px" }}
-    >
-      Add Attendance
-    </Button>
-    <Button color="secondary" variant="contained" onClick={onReportSearch}>
+   
+    <Button className="ml-2 p-2 px-4 w-50" color="secondary" variant="contained" onClick={onReportSearch}>
       Search
     </Button>
   </div>
