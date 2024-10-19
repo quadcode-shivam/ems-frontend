@@ -1,35 +1,33 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import context from 'context'; // Fix or remove this import.
 
 import "bootstrap/dist/css/bootstrap.css";
 import "assets/scss/now-ui-dashboard.scss?v1.5.0";
 import "assets/css/demo.css";
 
 import AdminLayout from "layouts/Admin.js";
-import Login from "views/auth/Login.jsx";  // Import the Login component
-import Register from "views/auth/Register.jsx";  // Import the Register component
-import ForgotPassword from "views/auth/ForgotPassword.jsx";  // Import the Forgot Password component
-import Dashboards from "views/Dashboards.js"; // Import the Dashboard component
+import Login from "views/auth/Login.jsx";
+import Register from "views/auth/Register.jsx";
+import ForgotPassword from "views/auth/ForgotPassword.jsx";
+import Dashboards from "views/Dashboards.js";
+import ProtectedRoute from './ProtectedRoute';  // Import the ProtectedRoute component
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <BrowserRouter>
     <Routes>
-      {/* Admin Layout for dashboard and other admin-related routes */}
-      <Route path="/admin/*" element={<AdminLayout />} />
+      {/* Protect the admin and dashboard routes */}
+      <Route path="/admin/*" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>} />
+      <Route path="/admin/dashboards" element={<ProtectedRoute><Dashboards /></ProtectedRoute>} />
 
-      {/* Separate routes outside the admin layout */}
+      {/* Auth routes (do not require authentication) */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} /> {/* New route for Forgot Password */}
+      <Route path="/forgot-password" element={<ForgotPassword />} />
 
-      {/* Example dashboard route within Admin Layout */}
-      <Route path="/admin/dashboards" element={<Dashboards />} />
-
-      {/* Redirect all unknown paths to admin dashboard */}
+      {/* Redirect unknown routes to dashboards if authenticated */}
       <Route path="*" element={<Navigate to="/admin/dashboards" replace />} />
     </Routes>
   </BrowserRouter>

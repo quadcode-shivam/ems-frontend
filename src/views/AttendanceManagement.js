@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { fetchAttendance, createAttendance, actionAttendApi } from "api";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import '../assets/css/demo.css'
+import "../assets/css/demo.css";
 import {
   Table,
   TableHead,
@@ -13,7 +13,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Badge,
 } from "@mui/material";
 import DemoNavbar from "components/Navbars/DemoNavbar";
 import {
@@ -25,6 +24,7 @@ import {
 } from "reactstrap";
 import PaginationComponent from "components/pagination/PaginationComponent";
 import Loader from "./Loader/Loader";
+import { More, MoreHoriz } from "@mui/icons-material";
 
 const AttendanceManagement = () => {
   const [attendanceRecords, setAttendanceRecords] = useState([]);
@@ -36,9 +36,10 @@ const AttendanceManagement = () => {
   const [employeeId, setEmployeeId] = useState("");
   const [status, setStatus] = useState("");
   const [rangeDate, setRangeDate] = useState({
-    start: new Date(new Date().setDate(new Date().getDate() - 30)),
+    start: new Date(),
     end: new Date(),
   });
+  const [role, setRole] = useState();
   const [totals, setTotals] = useState({
     absent: 0,
     halfDayPresent: 0,
@@ -64,7 +65,7 @@ const AttendanceManagement = () => {
       );
       setAttendanceRecords(response.data);
       setTotalItems(response.total);
-      setTotals(response.totals); // Update with response structure
+      setTotals(response.totals);
     } catch (error) {
       setError("Failed to fetch attendance records.");
     } finally {
@@ -110,17 +111,18 @@ const AttendanceManagement = () => {
 
   useEffect(() => {
     loadAttendance();
+    const user = JSON.parse(localStorage.getItem("user"));
+    setRole(user.role);
   }, [currentPage, itemsPerPage, status]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loader />;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <>
       <DemoNavbar size="sm" />
-      {loading == true && <Loader />}
-      <div style={{marginTop: "60px", minHeight: "100%", background: "#0F1214"  }}>
-        <Card className="p-3 " style={{ background: "transparent" }}>
+      <div style={{ marginTop: "60px", minHeight: "100%", background: "#0F1214" }}>
+        <Card className="p-3" style={{ background: "transparent" }}>
           <CardHeader style={headerStyle}>
             <Typography variant="h4" className="text-light" style={{ fontSize: "30px" }}>
               Manage Attendance
@@ -141,9 +143,10 @@ const AttendanceManagement = () => {
             <AttendanceTable
               records={attendanceRecords}
               onActionAttend={actionAttend}
+              role={role} // Pass the role to the AttendanceTable
             />
             <PaginationComponent
-            className="border border-1 "
+              className="border border-1"
               totalItems={totalItems}
               itemsPerPage={itemsPerPage}
               currentPage={currentPage}
@@ -168,19 +171,9 @@ const headerStyle = {
 };
 
 const SummaryCards = ({ totals }) => (
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "space-around",
-      marginBottom: "16px",
-    }}
-  >
+  <div style={{ display: "flex", justifyContent: "space-around", marginBottom: "16px" }}>
     {Object.entries(totals).map(([key, count]) => (
-      <SummaryCard
-        key={key}
-        title={key.charAt(0).toUpperCase() + key.slice(1)}
-        count={count}
-      />
+      <SummaryCard key={key} title={key.charAt(0).toUpperCase() + key.slice(1)} count={count} />
     ))}
   </div>
 );
@@ -188,19 +181,13 @@ const SummaryCards = ({ totals }) => (
 const SummaryCard = ({ title, count }) => {
   const cardColor = getCardColor(title);
   return (
-    <Card
-      className={`text-light fw-bold `}
-      style={{ backgroundColor: "#11171D", boxShadow:"0px 0px 1px 1px", flex: 1, margin: "0 8px" }}
-    >
+    <Card className={`text-light fw-bold`} style={{ backgroundColor: "#11171D", boxShadow: "0px 0px 1px 1px", flex: 1, margin: "0 8px" }}>
       <CardContent>
         <Typography variant="h6" style={{ fontSize: "20px" }}>
           {title}
         </Typography>
         <Typography variant="h4" style={{ fontSize: "26px" }}>
-          Total: {count}{" "}
-          <span style={{ fontSize: "22px" }}>
-            ({count === 0 ? "Zero" : numberToWords(count)})
-          </span>
+          Total: {count} <span style={{ fontSize: "22px" }}>({count === 0 ? "Zero" : numberToWords(count)})</span>
         </Typography>
       </CardContent>
     </Card>
@@ -305,138 +292,54 @@ const SearchAndAddSection = ({
       style={{ marginRight: "16px" }}
     />
     <Button
-      className="btn bg-secondary border border-2 pt-2 ml-2"
-      style={{  minWidth: "100px" }}
-      onClick={onReportSearch}
-    >
-      <span className="text-light fw-bold" style={{ fontSize: "14px" }}>
-        Search
-      </span>
-    </Button>
-    <Button
-      className="btn w-100 border bg-secondary border-2 pt-2 ml-3"
+      color="primary"
+      variant="contained"
       onClick={onAddAttendance}
-      style={{
-        color: "#fff",
-        minWidth: "170px",
-        fontSize: "14px",
-      }}
+      style={{ marginRight: "16px" }}
     >
       Add Attendance
     </Button>
+    <Button color="secondary" variant="contained" onClick={onReportSearch}>
+      Search
+    </Button>
   </div>
 );
-const AttendanceTable = ({ records, onActionAttend }) => (
-  <div style={{  overflow: "hidden" }}>
-    <Table className="table-responsive table-striped">
-      <TableHead className="bg-secondary rounded">
-        <TableRow>
-          <TableCell style={{ color: "#fff" }}>Employee ID</TableCell>
-          <TableCell style={{ color: "#fff" }}>Check-In Time</TableCell>
-          <TableCell style={{ color: "#fff" }}>Check-Out Time</TableCell>
-          <TableCell style={{ color: "#fff" }}>Status</TableCell>
-          <TableCell style={{ color: "#fff" }}>Action</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody >
-        {records.map((record) => (
-          <TableRow key={record.id}>
-            <TableCell style={{ background:"#11171D", color:"white" }}>{record.user_id}</TableCell>
-            <TableCell style={{ background:"#11171D", color:"white" }}>
-              {record.check_in_time ? record.check_in_time : "----------"}
-            </TableCell >
-            <TableCell style={{ background:"#11171D", color:"white" }}>
-              {record.check_out_time ? record.check_out_time : "----------"}
-            </TableCell>
-            <TableCell style={{ background:"#11171D", color:"white" }}>
-              {record.status == "fullday" && (
-                <span className={`badge p-2 fs-2 bg-success`}>
-                  {record.status}
-                </span>
-              )}
-              {record.status == "present" && (
-                <span className={`badge p-2 fs-2 bg-success`}>
-                  {record.status}
-                </span>
-              )}
-              {record.status == "HalfDayPresent" && (
-                <span className={`badge p-2 fs-2 bg-warning`}>
-                  {record.status}
-                </span>
-              )}
-              {record.status == "absent" && (
-                <span className={`badge p-2 fs-2 bg-danger`}>
-                  {record.status}
-                </span>
-              )}
-              {record.status == "Late" && (
-                <span className={`badge p-2 fs-2 bg-secondary text-light`}>
-                  {record.status}
-                </span>
-              )}
-            </TableCell>
 
-            <TableCell style={{ background:"#11171D", color:"white" }}>
+const AttendanceTable = ({ records, onActionAttend, role }) => (
+  <Table>
+    <TableHead>
+      <TableRow className="bg-secondary text-light">
+        <TableCell className="text-light">Employee ID</TableCell>
+        <TableCell className="text-light"> Employee Details</TableCell>
+        <TableCell className="text-light">Status</TableCell>
+        <TableCell className="text-light">Date</TableCell>
+        {role === "admin" && <TableCell className="text-light">Action</TableCell>} {/* Conditional rendering for Action column */}
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {records.map((record) => (
+        <TableRow key={record.id}>
+          <TableCell className="text-light fw-bold">{record.user_id}</TableCell>
+          <TableCell className="text-light">{record.user_name}<br/> <span className="badge badge-primarys border border-1 border-light p-1 mt-2" style={{fontSize:"14px"}}>{record.user_email}</span></TableCell>
+          <TableCell className="text-light">{record.status}</TableCell>
+          <TableCell className="text-light">{new Date(record.date).toLocaleDateString()}</TableCell>
+          {role === "admin" && ( 
+            <TableCell>
               <UncontrolledDropdown>
-                <DropdownToggle
-                  tag="a"
-                  href="#more"
-                  onClick={(ev) => ev.preventDefault()}
-                  className="btn btn-icon bg-primary btn-sm"
-                  style={{ borderRadius: "50px" }}
-                >
-                  <span
-                    style={{
-                      fontSize: "20px",
-                      fontWeight: "600",
-                      lineHeight: "23px",
-                    }}
-                  >
-                    ...
-                  </span>
+                <DropdownToggle className="p-1"  style={{ fontSize:"24px", background:"transparent"}}>
+                  <More/>
                 </DropdownToggle>
-                <DropdownMenu right>
-                  {["Late", "Present", "Absent", "Halfday", "Fullday"].map(
-                    (action) => (
-                      <DropdownItem
-                        key={action}
-                        tag="a"
-                        href="#remove"
-                        onClick={() =>
-                          onActionAttend(record.id, action.toLowerCase())
-                        }
-                      >
-                        <span>{action.toLowerCase()}</span>
-                      </DropdownItem>
-                    )
-                  )}
+                <DropdownMenu>
+                  <DropdownItem onClick={() => onActionAttend(record.id, "update")}>Update</DropdownItem>
+                  <DropdownItem onClick={() => onActionAttend(record.id, "delete")}>Delete</DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
             </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  </div>
+          )}
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
 );
-
-const tableHeadStyle = {
-  background: "#343a40",
-};
-
-const getBadgeColor = (status) => {
-  switch (status) {
-    case "present":
-      return "success";
-    case "absent":
-      return "danger";
-    case "halfday":
-      return "warning";
-    case "late":
-      return "info";
-    default:
-      return "secondary";
-  }
-};
 
 export default AttendanceManagement;

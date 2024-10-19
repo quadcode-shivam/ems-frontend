@@ -55,6 +55,7 @@ export default function EmployeeManagement() {
   });
   const [designations, setDesignations] = useState([]);
   const [positions, setPositions] = useState([]);
+  const [role, setRole] = useState();
 
   const [openModal, setOpenModal] = useState(false);
   const {
@@ -158,6 +159,8 @@ export default function EmployeeManagement() {
   useEffect(() => {
     loadEmployees();
     fetchDesignationsAndPositions();
+    const user = JSON.parse(localStorage.getItem("user"));
+    setRole(user.role);
   }, [currentPage, itemsPerPage]);
 
   const filteredEmployees = employees.filter((employee) =>
@@ -406,163 +409,164 @@ export default function EmployeeManagement() {
                     </Grid>
                   </Grid>
                 </AccordionSummary>
-
-                <AccordionDetails
-                  style={{
-                    backgroundColor: "#14181B ",
-                    color: "#fff",
-                    padding: "16px",
-                  }}
-                  // className="border border-1 rounded"
-                >
-                  <Grid container spacing={3}>
-                    <Grid item xs={4}>
-                      <Paper
-                        elevation={0}
-                        style={{
-                          backgroundColor: "#14181B",
-                          padding: "8px",
-                          color: "#fff",
-                        }}
-                      >
-                        <Typography variant="body2">
-                          Phone: {employee.mobile}
-                        </Typography>
-                      </Paper>
-                    </Grid>
-
-                    {/* Employee Position */}
-                    <Grid item xs={4}>
-                      <Paper
-                        elevation={0}
-                        style={{
-                          backgroundColor: "#14181B",
-                          padding: "8px",
-                          color: "#fff",
-                        }}
-                      >
-                        <Typography variant="body2">
-                          Position: {employee.position}
-                        </Typography>
-                      </Paper>
-                    </Grid>
-
-                    {/* Employee Designation */}
-                    <Grid item xs={4}>
-                      <Paper
-                        elevation={0}
-                        style={{
-                          backgroundColor: "#14181B",
-                          padding: "8px",
-                          color: "#fff",
-                        }}
-                      >
-                        <Typography variant="body2">
-                          Designation: {employee.designation}
-                        </Typography>
-                      </Paper>
-                    </Grid>
-
-                    {/* Employee Salary */}
-                    <Grid item xs={4}>
-                      <Paper
-                        elevation={0}
-                        style={{
-                          backgroundColor: "#14181B",
-                          padding: "8px",
-                          color: "#fff",
-                        }}
-                      >
-                        <Typography variant="body2">
-                          Salary: ${employee.salary}
-                        </Typography>
-                      </Paper>
-                    </Grid>
-
-                    {/* Employee Address */}
-                    <Grid item xs={4}>
-                      <Paper
-                        elevation={0}
-                        style={{
-                          backgroundColor: "#14181B",
-                          padding: "8px",
-                          color: "#fff",
-                        }}
-                      >
-                        <Typography variant="body2">
-                          Address: {employee.address}
-                        </Typography>
-                      </Paper>
-                    </Grid>
-
-                    {/* Employee Country */}
-                    <Grid item xs={4}>
-                      <Paper
-                        elevation={0}
-                        style={{
-                          backgroundColor: "#14181B",
-                          padding: "8px",
-                          color: "#fff",
-                        }}
-                      >
-                        <Typography variant="body2">
-                          Country: {employee.country}
-                        </Typography>
-                      </Paper>
-                    </Grid>
-
-                    {/* Employee State */}
-                    <Grid item xs={4}>
-                      <Paper
-                        elevation={0}
-                        style={{
-                          backgroundColor: "#14181B",
-                          padding: "8px",
-                          color: "#fff",
-                        }}
-                      >
-                        <Typography variant="body2">
-                          State: {employee.state}
-                        </Typography>
-                      </Paper>
-                    </Grid>
-
-                    {/* Employee Hire Date */}
-                    <Grid item xs={4}>
-                      <Paper
-                        elevation={0}
-                        style={{
-                          backgroundColor: "#14181B",
-                          padding: "8px",
-                          color: "#fff",
-                        }}
-                      >
-                        <Typography variant="body2">
-                          Hire Date: {employee.date_hired}
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <Paper
-                        elevation={0}
-                        style={{
-                          backgroundColor: "#14181B",
-                          padding: "8px",
-                          color: "#fff",
-                        }}
-                      >
-                        <button
-                          onClick={() => {
-                            deleteEmployees(employee.user_id);
+                {role == "admin" && (
+                  <AccordionDetails
+                    style={{
+                      backgroundColor: "#14181B ",
+                      color: "#fff",
+                      padding: "16px",
+                    }}
+                    // className="border border-1 rounded"
+                  >
+                    <Grid container spacing={3}>
+                      <Grid item xs={4}>
+                        <Paper
+                          elevation={0}
+                          style={{
+                            backgroundColor: "#14181B",
+                            padding: "8px",
+                            color: "#fff",
                           }}
-                          className="p-2 bg-danger border border-1 rounded text-light text-right"
                         >
-                          <RemoveCircleOutlineOutlined /> Remove Employee
-                        </button>
-                      </Paper>
+                          <Typography variant="body2">
+                            Phone: {employee.mobile}
+                          </Typography>
+                        </Paper>
+                      </Grid>
+
+                      {/* Employee Position */}
+                      <Grid item xs={4}>
+                        <Paper
+                          elevation={0}
+                          style={{
+                            backgroundColor: "#14181B",
+                            padding: "8px",
+                            color: "#fff",
+                          }}
+                        >
+                          <Typography variant="body2">
+                            Position: {employee.position}
+                          </Typography>
+                        </Paper>
+                      </Grid>
+
+                      {/* Employee Designation */}
+                      <Grid item xs={4}>
+                        <Paper
+                          elevation={0}
+                          style={{
+                            backgroundColor: "#14181B",
+                            padding: "8px",
+                            color: "#fff",
+                          }}
+                        >
+                          <Typography variant="body2">
+                            Designation: {employee.designation}
+                          </Typography>
+                        </Paper>
+                      </Grid>
+
+                      {/* Employee Salary */}
+                      <Grid item xs={4}>
+                        <Paper
+                          elevation={0}
+                          style={{
+                            backgroundColor: "#14181B",
+                            padding: "8px",
+                            color: "#fff",
+                          }}
+                        >
+                          <Typography variant="body2">
+                            Salary: ${employee.salary}
+                          </Typography>
+                        </Paper>
+                      </Grid>
+
+                      {/* Employee Address */}
+                      <Grid item xs={4}>
+                        <Paper
+                          elevation={0}
+                          style={{
+                            backgroundColor: "#14181B",
+                            padding: "8px",
+                            color: "#fff",
+                          }}
+                        >
+                          <Typography variant="body2">
+                            Address: {employee.address}
+                          </Typography>
+                        </Paper>
+                      </Grid>
+
+                      {/* Employee Country */}
+                      <Grid item xs={4}>
+                        <Paper
+                          elevation={0}
+                          style={{
+                            backgroundColor: "#14181B",
+                            padding: "8px",
+                            color: "#fff",
+                          }}
+                        >
+                          <Typography variant="body2">
+                            Country: {employee.country}
+                          </Typography>
+                        </Paper>
+                      </Grid>
+
+                      {/* Employee State */}
+                      <Grid item xs={4}>
+                        <Paper
+                          elevation={0}
+                          style={{
+                            backgroundColor: "#14181B",
+                            padding: "8px",
+                            color: "#fff",
+                          }}
+                        >
+                          <Typography variant="body2">
+                            State: {employee.state}
+                          </Typography>
+                        </Paper>
+                      </Grid>
+
+                      {/* Employee Hire Date */}
+                      <Grid item xs={4}>
+                        <Paper
+                          elevation={0}
+                          style={{
+                            backgroundColor: "#14181B",
+                            padding: "8px",
+                            color: "#fff",
+                          }}
+                        >
+                          <Typography variant="body2">
+                            Hire Date: {employee.date_hired}
+                          </Typography>
+                        </Paper>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Paper
+                          elevation={0}
+                          style={{
+                            backgroundColor: "#14181B",
+                            padding: "8px",
+                            color: "#fff",
+                          }}
+                        >
+                          <button
+                            onClick={() => {
+                              deleteEmployees(employee.user_id);
+                            }}
+                            className="p-2 bg-danger border border-1 rounded text-light text-right"
+                          >
+                            <RemoveCircleOutlineOutlined /> Remove Employee
+                          </button>
+                        </Paper>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </AccordionDetails>
+                  </AccordionDetails>
+                )}
               </Accordion>
             ))}
           </CardContent>
