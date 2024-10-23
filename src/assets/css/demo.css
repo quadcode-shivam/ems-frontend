@@ -1,4 +1,17 @@
-
+:root {
+  --primary-bg-color: #0f1214; /* Background color for main sections */
+  --secondary-bg-color: #272b30; /* Column background color */
+  --hover-bg-color: #3a3f43; /* Hover effect for columns */
+  --task-card-bg: #2c3e50; /* Task card background color */
+  --hover-task-card-bg: #34495e; /* Hover effect for task cards */
+  --history-entry-bg: #3b3f45; /* Background for history entries */
+  --text-color: #ffffff; /* Default text color */
+  --subtext-color: #82878a; /* Secondary text color */
+  --divider-color: rgba(255, 255, 255, 0.1); /* Divider color */
+  --button-bg-color: #2c3e50; /* Button background color */
+  --button-hover-color: #82878a; /* Button hover color */
+  --transition-time: 0.3s; /* Transition timing */
+}
 .tim-row {
   margin-bottom: 20px;
 }

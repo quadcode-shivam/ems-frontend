@@ -7,6 +7,7 @@ import UserDashboard from "views/UserDashboard";
 import AttendanceManage from "views/admin/AttendanceManage";
 import Policy from "views/admin/Policy";
 import HolidayCalendar from "views/holiday/HolidayCalendar"; // Import your HolidayCalendar component
+import Appointmain from "views/appointment/appointmain";
 
 const dashRoutes = [
   {
@@ -70,6 +71,13 @@ const dashRoutes = [
     name: "Holiday Calendar",
     icon: "design-2_ruler-pencil",
     component: <HolidayCalendar />, // Component for the holiday calendar
+    layout: "/admin",
+  },
+  {
+    path: "/appointment",  // New route for Holiday Calendar
+    name: "Appointment",
+    icon: "design-2_ruler-pencil",
+    component: <Appointmain />, // Component for the holiday calendar
     layout: "/admin",
   },
 ];
