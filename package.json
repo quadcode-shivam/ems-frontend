@@ -11,7 +11,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@mui/icons-material": "^6.1.1",
     "@mui/lab": "^6.0.0-beta.10",
-    "@mui/material": "^6.1.1",
+    "@mui/material": "^6.1.5",
     "@mui/x-date-pickers": "^7.21.0",
     "@phosphor-icons/react": "^2.1.7",
     "ajv": "^8.17.1",
