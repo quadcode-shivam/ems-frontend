@@ -1,0 +1,101 @@
+
+  .Reports {
+    padding: 20px;
+  }
+  
+  h2 {
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Styling the form container */
+  .form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background-color: var(--secondary-bg-color);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Styling input fields */
+  .form-container input[type="text"],
+  .form-container input[type="date"],
+  .form-container select {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--task-card-bg);
+    color: var(--text-color);
+    transition: background-color var(--transition-time);
+  }
+  
+  .form-container input:focus,
+  .form-container select:focus {
+    background-color: var(--hover-task-card-bg);
+  }
+  
+  /* Add Backlink button styling */
+  .form-container button {
+    padding: 10px 20px;
+    background-color: var(--button-bg-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color var(--transition-time);
+  }
+  
+  .form-container button:hover {
+    background-color: var(--button-hover-color);
+  }
+  
+  /* Styling the table */
+  .backlink-table {
+    width: 100%;
+    margin-top: 1.5rem;
+    background-color: var(--secondary-bg-color);
+    border-collapse: collapse;
+  }
+  
+  .backlink-table th,
+  .backlink-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--divider-color);
+  }
+  
+  .backlink-table th {
+    color: var(--subtext-color);
+  }
+  
+  .backlink-table td {
+    color: var(--text-color);
+  }
+  
+  .backlink-table tr:hover {
+    background-color: var(--hover-bg-color);
+  }
+  
+  /* Checkbox styling */
+  .backlink-table input[type="checkbox"] {
+    cursor: pointer;
+  }
+  
+  /* Submit button styling */
+  .submit-btn {
+    margin-top: 1.5rem;
+    padding: 10px 20px;
+    background-color: var(--button-bg-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color var(--transition-time);
+  }
+  
+  .submit-btn:hover {
+    background-color: var(--button-hover-color);
+  }
+  

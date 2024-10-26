@@ -17,8 +17,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import "../../assets/css/demo.css";
-import { Pagination } from "@mui/material";
-
+import { Pagination, Typography } from "@mui/material";
 import {
   createAppointment,
   fetchAppointments,
@@ -46,8 +45,7 @@ const AppointmentForm = () => {
   const [timePickerOpen, setTimePickerOpen] = useState(false);
   const [timeSlots, setTimeSlots] = useState([]);
   const [role, setRole] = useState();
-
-  // Pagination states
+  const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -69,23 +67,27 @@ const AppointmentForm = () => {
 
     return slots;
   };
-
-  useEffect(() => {
-    const loadAppointments = async () => {
+  const loadAppointments = async () => {
+    try {
       const fetchedAppointments = await fetchAppointments(
         page + 1,
         rowsPerPage
       );
       if (fetchedAppointments.data) {
         setAppointments(fetchedAppointments.data);
+        setTotalPages(Math.ceil(fetchedAppointments.total / rowsPerPage));
       } else {
         console.error(
           "Fetched data is not in expected format:",
           fetchedAppointments
         );
       }
-    };
+    } catch (error) {
+      console.error("Error loading appointments:", error);
+    }
+  };
 
+  useEffect(() => {
     loadAppointments();
   }, [page, rowsPerPage]);
 
@@ -107,44 +109,47 @@ const AppointmentForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      formData.name &&
-      formData.email &&
-      formData.date &&
-      formData.time &&
-      formData.reason
-    ) {
-      try {
-        if (isEditing) {
-          await updateAppointment(currentAppointmentId, formData);
-          setAppointments((prevAppointments) =>
-            prevAppointments.map((appointment) =>
-              appointment.id === currentAppointmentId
-                ? { ...appointment, ...formData }
-                : appointment
-            )
-          );
-        } else {
-          const newAppointment = await createAppointment({
-            ...formData,
-            user_id: role,
-          });
-          setAppointments((prevAppointments) => [
-            ...prevAppointments,
-            newAppointment,
-          ]);
-        }
-        handleClose();
-      } catch (error) {
-        console.error(
-          isEditing
-            ? "Error updating appointment:"
-            : "Error creating appointment:",
-          error
-        );
-      }
-    } else {
+  
+    // Validate form data
+    const isFormValid = formData.name && formData.email && formData.date && formData.time && formData.reason;
+  
+    if (!isFormValid) {
       alert("Please fill in all fields");
+      return;
+    }
+  
+    try {
+      if (isEditing) {
+        // Updating an existing appointment
+        await updateAppointment({ ...formData, id: currentAppointmentId });
+  
+        // Update the local state with the edited appointment
+        setAppointments((prevAppointments) =>
+          prevAppointments.map((appointment) =>
+            appointment.id === currentAppointmentId
+              ? { ...appointment, ...formData } // Merge updated data
+              : appointment
+          )
+        );
+      } else {
+        const newAppointment = await createAppointment({
+          ...formData,
+          user_id: role, 
+        });
+  
+        setAppointments((prevAppointments) => [
+          ...prevAppointments,
+          newAppointment,
+        ]);
+      }
+  
+      // Close the form/modal after successful submission
+      handleClose();
+    } catch (error) {
+      console.error(
+        isEditing ? "Error updating appointment:" : "Error creating appointment:",
+        error
+      );
     }
   };
 
@@ -160,11 +165,12 @@ const AppointmentForm = () => {
       console.error("Error removing appointment:", error);
     }
   };
+
   const onStatusChange = async (appointmentId, newStatus) => {
     try {
       await updateAppointmentStatus(appointmentId, newStatus);
     } catch (error) {
-      console.error("Error removing appointment:", error);
+      console.error("Error updating appointment status:", error);
     }
   };
 
@@ -175,7 +181,7 @@ const AppointmentForm = () => {
       date: appointment.date,
       time: appointment.time,
       reason: appointment.reason || "",
-      status: appointment.status || "Pending", // Set current status
+      status: appointment.status || "0", // Set current status
     });
     setCurrentAppointmentId(appointment.id);
     setIsEditing(true);
@@ -209,12 +215,7 @@ const AppointmentForm = () => {
 
   // Pagination handlers
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to first page
+    setPage(newPage - 1);
   };
 
   // Dropdown Menu Component for Actions
@@ -291,26 +292,26 @@ const AppointmentForm = () => {
   };
 
   return (
-    <div className="p-4" style={{ marginTop: "50px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h4>Manage Appointments</h4>
+    <div className="p-4" style={{ marginTop: "50px", marginBottom: "40px" }}>
+      <div className="p-2" style={{ display: "flex", justifyContent: "space-between" }}>
+        <span style={{fontSize:"25px", marginTop:"10px"}}>Manage Appointments</span>
         <div>
           <button
             size="sm"
             className="btn btn-sm"
             onClick={handleOpen}
             style={{
-              color: "#1976d2",
-              border: "1px solid #1976d2",
-              background: "var(--primary-bg-color)",
+              color: "#ffffff",
+              border: "1px solid #ffffff",
+              background:"none"
             }}
           >
-            Create Appointment
+            + Create Appointment
           </button>
         </div>
       </div>
 
-      <Table>
+      <Table hover responsive className="table table-stripped">
         <thead>
           <tr>
             <th>Name</th>
@@ -318,30 +319,24 @@ const AppointmentForm = () => {
             <th>Date</th>
             <th>Time</th>
             <th>Reason</th>
-            <th>Status</th> {/* New Status Column */}
-            <th>Action</th>
+            <th>Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {appointments.map((appointment) => (
-            <tr key={appointment.id}>
-              <td>{appointment.name}</td>
-              <td>{appointment.email}</td>
-              <td>{appointment.date}</td>
-              <td>{appointment.time}</td>
-              <td>{appointment.reason}</td>
-              <td>
-                {appointment.status == 1 && (
-                  <span className="badge bg-success">Accept</span>
-                )}
-                {appointment.status == 2 && (
-                  <span className="badge bg-warning">Pending</span>
-                )}
-                {appointment.status == 3 && (
-                  <span className="badge bg-danger">Suspend</span>
-                )}
+            <tr key={appointment.id} className="m-2 p-2">
+              <td  className=" p-1">{appointment.name}</td>
+              <td  className=" p-1">{appointment.email}</td>
+              <td  className=" p-1">{appointment.date}</td>
+              <td  className=" p-1">{appointment.time}</td>
+              <td  className=" p-1">{appointment.reason}</td>
+              <td  className=" p-1">
+                <Badge color={getStatusColor(appointment.status)}>
+                  {getStatusText(appointment.status)}
+                </Badge>
               </td>
-              <td>
+              <td  className=" p-1">
                 <ActionMenu appointment={appointment} />
               </td>
             </tr>
@@ -349,17 +344,18 @@ const AppointmentForm = () => {
         </tbody>
       </Table>
 
-      {/* Pagination */}
-      <div>
+      <div className="d-flex justify-content-between align-items-center m-0 p-0 ">
+      <div className="custom-pagination m-0 p-0"> {/* Apply the custom class here */}
         <Pagination
-          count={Math.ceil(appointments.length / rowsPerPage)}
+        className="m-0 p-0"
+          count={totalPages}
           page={page + 1}
           onChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
           variant="outlined"
           shape="rounded"
+          color="warning"
         />
+        </div>
       </div>
       <Dialog
         open={open}
@@ -531,3 +527,30 @@ const AppointmentForm = () => {
 };
 
 export default AppointmentForm;
+
+// Helper Functions
+const getStatusText = (status) => {
+  switch (status) {
+    case "1":
+      return "Accepted";
+    case "2":
+      return "Pending";
+    case "3":
+      return "Suspended";
+    default:
+      return "Unknown";
+  }
+};
+
+const getStatusColor = (status) => {
+  switch (status) {
+    case "1":
+      return "success";
+    case "2":
+      return "warning";
+    case "3":
+      return "danger";
+    default:
+      return "secondary";
+  }
+};

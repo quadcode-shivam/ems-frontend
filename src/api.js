@@ -388,7 +388,6 @@ const fetchSettings = async (currentPage, itemsPerPage) => {
   }
 };
 
-
 // Create Appointment
 const createAppointment = async (data) => {
   try {
@@ -401,9 +400,9 @@ const createAppointment = async (data) => {
 };
 
 // Fetch Appointments
-const fetchAppointments = async () => {
+const fetchAppointments = async (data) => {
   try {
-    const response = await api.post("appointments"); // Endpoint for fetching appointments
+    const response = await api.post("appointments", { page: data }); // Endpoint for fetching appointments
     return response.data;
   } catch (error) {
     console.error("Error fetching appointments:", error);
@@ -449,6 +448,76 @@ const updateAppointmentStatus = async (appointmentId, status) => {
   }
 };
 
+const createBacklink = async (data) => {
+  try {
+    const response = await api.post("backlinks/store", data); // Endpoint for storing backlinks
+    return response.data;
+  } catch (error) {
+    console.error("Error creating backlink:", error);
+    throw error;
+  }
+};
+
+// Fetch Backlinks
+const fetchBacklinks = async (data) => {
+  try {
+    const response = await api.post("backlinks", data); // Endpoint for fetching backlinks
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching backlinks:", error);
+    throw error;
+  }
+};
+
+// Update Backlink
+const updateBacklink = async (data) => {
+  try {
+    const response = await api.post("backlinks/update", data); // Endpoint for updating backlinks
+    return response.data;
+  } catch (error) {
+    console.error("Error updating backlink:", error);
+    throw error;
+  }
+};
+
+// Remove Backlink
+const removeBacklink = async (backlinkId) => {
+  try {
+    const response = await api.post("backlinks/remove", {
+      id: backlinkId, // Send backlink ID in the request body
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error removing backlink:", error);
+    throw error;
+  }
+};
+
+// Update Backlink Status
+const updateBacklinkStatus = async (backlinkId, status) => {
+  try {
+    const response = await api.post("backlinks/status", {
+      id: backlinkId, // Send backlink ID in the request body
+      status: status, // Send the new status in the request body
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating backlink status:", error);
+    throw error;
+  }
+};
+
+// Update Checked Status
+const updateCheckedStatus = async (data) => {
+  try {
+    const response = await api.post("backlinks/update-checked",data);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating checked status:", error);
+    throw error;
+  }
+};
+
 export {
   loginUser,
   registerUser,
@@ -486,5 +555,11 @@ export {
   updateAppointmentStatus,
   removeAppointment,
   fetchAppointments,
-  updateAppointment
+  updateAppointment,
+  updateCheckedStatus,
+  updateBacklinkStatus,
+  removeBacklink,
+  updateBacklink,
+  fetchBacklinks,
+  createBacklink,
 };
