@@ -1,9 +1,22 @@
-
+:root {
+  --primary-bg-color: #0f1214; /* Background color for main sections */
+  --secondary-bg-color: #272b30; /* Column background color */
+  --hover-bg-color: #3a3f43; /* Hover effect for columns */
+  --task-card-bg: #2c3e50; /* Task card background color */
+  --hover-task-card-bg: #34495e; /* Hover effect for task cards */
+  --history-entry-bg: #3b3f45; /* Background for history entries */
+  --text-color: #ffffff; /* Default text color */
+  --subtext-color: #82878a; /* Secondary text color */
+  --divider-color: rgba(255, 255, 255, 0.1); /* Divider color */
+  --button-bg-color: #2c3e50; /* Button background color */
+  --button-hover-color: #82878a; /* Button hover color */
+  --transition-time: 0.3s; /* Transition timing */
+}
 .tim-row {
   margin-bottom: 20px;
 }
 
-body{
+body {
   font-family: "Roboto Slab", serif;
 }
 .tim-white-buttons {
@@ -54,7 +67,7 @@ body{
   position: fixed;
   bottom: 0;
   width: 90%;
-  background-color: #080B0F; /* Customize background color as needed */
+  background-color: #080b0f; /* Customize background color as needed */
   padding: 10px 0;
   text-align: center;
   z-index: 1000; /* Ensures it's above other content */
@@ -71,16 +84,22 @@ body{
   opacity: 1;
   color: #ffffff;
 }
-.date-picker{
-  border: 3px solid #080B0F;
+.date-picker {
+  border: 3px solid #080b0f;
   border-radius: 4px;
   min-height: 40px;
   min-width: 190px;
 }
-#Label{
-  color:#080B0F
+#Label {
+  color: #080b0f;
 }
-.form-control, .rdl-filter, .dual-listbox .dual-listbox__search, div.dataTables_wrapper div.dataTables_filter input {color: #080B0F;border: 1px solid #080B0F;}
+.form-control,
+.rdl-filter,
+.dual-listbox .dual-listbox__search,
+div.dataTables_wrapper div.dataTables_filter input {
+  color: #080b0f;
+  border: 1px solid #080b0f;
+}
 .dashboard-container {
   padding: 20px;
 }
@@ -92,19 +111,19 @@ body{
 }
 
 .record-card {
-  background-color: #11171D;
-  color:#fff;
+  background-color: #11171d;
+  color: #fff;
   font-weight: bold;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 10px;
   height: 200px; /* Adjust height for 2x4 aspect ratio */
-  width: 100%;   /* Width will automatically adjust based on the grid */
+  width: 100%; /* Width will automatically adjust based on the grid */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-
-.card-content, .card-footer {
+.card-content,
+.card-footer {
   text-align: left; /* Align text to the left */
 }
 
@@ -112,7 +131,6 @@ body{
   display: flex; /* Use flexbox for better alignment */
   justify-content: space-between; /* Space out items */
 }
-
 
 .record-card p {
   margin: 0;
@@ -123,7 +141,10 @@ body{
 /* Responsive adjustments */
 @media (max-width: 1200px) {
   .card-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 cards per row for smaller screens */
+    grid-template-columns: repeat(
+      2,
+      1fr
+    ); /* 2 cards per row for smaller screens */
   }
 }
 
@@ -133,4 +154,25 @@ body{
   }
 }
 
+.pointer {
+  cursor: pointer !important; /* Forces pointer style */
+}
 
+@media (max-width: 768px) {
+  div {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+th {
+  color: var(--text-color) !important;
+  background-color: var(--secondary-bg-color);
+  font-size: 13px;
+}
+thead {
+  font-size: 10px;
+}
+td {
+  color: var(--text-color) !important;
+  background-color: var(--primary-bg-color);
+}

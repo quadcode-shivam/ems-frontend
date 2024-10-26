@@ -388,6 +388,67 @@ const fetchSettings = async (currentPage, itemsPerPage) => {
   }
 };
 
+
+// Create Appointment
+const createAppointment = async (data) => {
+  try {
+    const response = await api.post("appointments/store", data); // Endpoint for storing appointments
+    return response.data;
+  } catch (error) {
+    console.error("Error creating appointment:", error);
+    throw error;
+  }
+};
+
+// Fetch Appointments
+const fetchAppointments = async () => {
+  try {
+    const response = await api.post("appointments"); // Endpoint for fetching appointments
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    throw error;
+  }
+};
+
+// Update Appointment
+const updateAppointment = async (data) => {
+  try {
+    const response = await api.post("appointments/update", data); // Endpoint for updating appointments
+    return response.data;
+  } catch (error) {
+    console.error("Error updating appointment:", error);
+    throw error;
+  }
+};
+
+// Remove Appointment
+const removeAppointment = async (appointmentId) => {
+  try {
+    const response = await api.post("appointments/remove", {
+      id: appointmentId, // Send appointment ID in the request body
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error removing appointment:", error);
+    throw error;
+  }
+};
+
+// Update Appointment Status
+const updateAppointmentStatus = async (appointmentId, status) => {
+  try {
+    const response = await api.post("appointments/status", {
+      id: appointmentId, // Send appointment ID in the request body
+      status: status, // Send the new status in the request body
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating appointment status:", error);
+    throw error;
+  }
+};
+
 export {
   loginUser,
   registerUser,
@@ -421,4 +482,9 @@ export {
   taskDetailUpdate,
   taskHistryFetch,
   updateCompanyPolicyApi,
+  createAppointment,
+  updateAppointmentStatus,
+  removeAppointment,
+  fetchAppointments,
+  updateAppointment
 };
