@@ -176,3 +176,50 @@ td {
   color: var(--text-color) !important;
   background-color: var(--primary-bg-color);
 }
+.custom-pagination {
+  display: flex;
+  justify-content: center; /* Center the pagination */
+  margin: 20px 0; /* Space around the pagination */
+}
+
+.custom-pagination .MuiPagination-root {
+  background-color: var(--primary-bg-color); /* Background color of the pagination */
+  border-radius: 8px; /* Rounded corners */
+  padding: 10px; /* Space around the pagination items */
+}
+
+.custom-pagination .MuiPagination-ul {
+  padding: 0; /* Remove default padding */
+}
+
+.custom-pagination .MuiPaginationItem-root {
+  color: var(--text-color); /* Text color */
+  border: 1px solid var(--divider-color); /* Border color */
+  margin: 0 5px; /* Space between pagination items */
+  transition: background-color var(--transition-time), color var(--transition-time); /* Smooth transition */
+}
+
+.custom-pagination .MuiPaginationItem-root:hover {
+  background-color: var(--hover-bg-color); /* Background color on hover */
+  color: var(--button-hover-color); /* Text color on hover */
+}
+
+.custom-pagination .MuiPaginationItem-previousNext {
+  font-weight: bold; /* Bold for previous/next buttons */
+  background-color: var(--button-bg-color); /* Background for previous/next buttons */
+  border-radius: 4px; /* Rounded corners for buttons */
+}
+
+.custom-pagination .MuiPaginationItem-previousNext:hover {
+  background-color: var(--button-hover-color); /* Darker on hover for buttons */
+}
+
+.custom-pagination .MuiPaginationItem-page.Mui-selected {
+  background-color: var(--hover-task-card-bg); /* Color for the selected page */
+  color: var(--text-color); /* Text color for selected page */
+  border: 1px solid var(--hover-task-card-bg); /* Border for selected page */
+}
+
+.custom-pagination .MuiPaginationItem-page.Mui-selected:hover {
+  background-color: var(--hover-bg-color); /* Darker on hover for selected page */
+}
