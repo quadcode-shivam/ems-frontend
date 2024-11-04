@@ -161,7 +161,7 @@ function Reports() {
   };
 
   return (
-    <div className="Reports">
+    <div style={{ marginBottom:"50px" }} className="Reports">
       <h2>Daily Backlink Report</h2>
 
       <div className="form-container">
