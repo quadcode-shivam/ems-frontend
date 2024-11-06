@@ -55,9 +55,10 @@ export default function AttendanceManage() {
     fetchLeaves();
   }, []);
 
-  const handleStatusChange = async (userId, newStatus) => {
+  const handleStatusChange = async (id,userId, newStatus) => {
     try {
       const request = {
+        id: id, // Use the logged-in user's ID
         user_id: userId, // Use the logged-in user's ID
         status: newStatus, // Status selected from the dropdown
       };
@@ -201,7 +202,7 @@ export default function AttendanceManage() {
                                 tag="a"
                                 href="#remove"
                                 onClick={() =>
-                                  handleStatusChange(leave.employee_id, action.toLowerCase())
+                                  handleStatusChange(leave.id,leave.employee_id, action.toLowerCase())
                                 }
                               >
                                 <span>{action.toLowerCase()}</span>
